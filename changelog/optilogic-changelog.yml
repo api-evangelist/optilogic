@@ -1,0 +1,32 @@
+generated: '2026-08-26'
+method: searched
+source: https://optilogic.com/resources/latest-updates
+url: https://optilogic.com/resources/latest-updates
+scheme: calendar-month
+cadence: monthly
+api_specific: false
+current_version: null
+note: 'Optilogic publishes a product-wide monthly "What''s New in Optilogic?" update. It is not an API
+  changelog: entries are dated to the month rather than the day, carry no version numbers, and do not
+  call out REST API additions, deprecations or breaking changes. The Swagger document has been published
+  as v0 / info.version 1.0.0 with no recorded revision history.'
+entries:
+- version: null
+  date: 2026-08
+  title: What's New in Optilogic? Product Update - August 2026
+  breaking: null
+  additions: null
+  highlights: null
+- version: null
+  date: 2026-06
+  title: What's New in Optilogic? Product Update - June 2026
+  breaking: null
+  additions: null
+  highlights: null
+entries_note: Titles and dates as published on the Latest Updates index on 2026-08-26. Per-entry breaking/addition
+  detail is not recorded because the index does not classify changes and no API-level change list is published.
+recent_platform_highlights_from_llms_txt:
+- Launched the DataStar data tool
+- Additions to Enterprise Teams
+- Expansion of Companion Apps and Excel functionality
+- Enhancements to tariff optimization and data transformation features

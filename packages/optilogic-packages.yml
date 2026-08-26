@@ -1,0 +1,63 @@
+generated: '2026-08-26'
+method: searched
+source:
+- https://pypi.org/pypi/optilogic/json
+- https://pypi.org/pypi/cosmicfrog/json
+- https://api-docs.optilogic.app/documentation
+package_count: 3
+official_count: 3
+packages:
+- name: optilogic
+  registry: pypi
+  language: python
+  official: true
+  version: 2.14.0
+  published: '2024-04-24'
+  url: https://pypi.org/project/optilogic/
+  docs: https://api-docs.optilogic.app/documentation
+  summary: Tools for interfacing with Optilogic Jobs and APIs
+  author: Optilogic <support@optilogic.com>
+  note: 'Marketed as "OptiPy" in the API documentation. This is the first-party client for the REST API
+    profiled in openapi/. DECAY SIGNAL: the last release is 2024-04-24, more than two years before this
+    probe (2026-08-26), while the platform shipped monthly product updates through August 2026 and launched
+    an MCP server in the interim.'
+- name: cosmicfrog
+  registry: pypi
+  language: python
+  official: true
+  version: 1.0.50
+  published: '2026-08-25'
+  url: https://pypi.org/project/cosmicfrog/
+  license: MIT
+  author: Optilogic
+  summary: Helpful utilities for working with Cosmic Frog models
+  note: 'Actively maintained: the latest release landed the day before this probe. Operates on Cosmic
+    Frog model databases (FrogModel) rather than on the REST API, so it complements rather than replaces
+    the optilogic package.'
+- name: OptiJS
+  registry: cdn
+  language: javascript
+  official: true
+  version: null
+  published: null
+  url: https://cdn.optilogic.app/web/optijs/api.js
+  note: 'Browser client library, named and linked from the API documentation description. CDN-distributed
+    with an UNPINNED URL — there is no version segment in the path and no registry metadata endpoint,
+    so neither we nor a consumer can tell which build they are served. The bundle is 3,543 bytes and hard-codes
+    apiDomain "https://api.optilogic.app". Not published to npm: registry.npmjs.org/optilogic, /cosmicfrog
+    and /@optilogic/sdk all returned 404 on 2026-08-26.'
+registries_checked:
+- registry: pypi
+  result: 2 first-party packages
+- registry: npm
+  result: no first-party package (optilogic, cosmicfrog, @optilogic/sdk all 404)
+- registry: maven-central
+  result: not checked - no JVM SDK referenced in docs
+- registry: nuget
+  result: not checked - no .NET SDK referenced in docs
+- registry: rubygems
+  result: not checked - no Ruby SDK referenced in docs
+- registry: crates.io
+  result: not checked - no Rust SDK referenced in docs
+- registry: pkg.go.dev
+  result: not checked - no Go SDK referenced in docs

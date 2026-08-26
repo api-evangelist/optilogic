@@ -1,0 +1,156 @@
+generated: '2026-08-26'
+method: derived
+source:
+- openapi/optilogic-rest-api-openapi.json
+- https://api-docs.optilogic.app/documentation
+- https://optilogic.com/help-center/connecting-via-api
+- https://optilogic.com/help-center/generating-app-and-api-keys/
+authentication:
+  style: api-key-header
+  header: X-API-KEY
+  issuance: POST /v0/refreshApiKey with X-USER-ID + X-USER-PASSWORD, or with X-REFRESH-KEY
+  ttl: API keys minted through refreshApiKey expire after one hour; App keys generated in the Optilogic
+    app do not expire.
+  docs: https://optilogic.com/help-center/generating-app-and-api-keys/
+  see: authentication/optilogic-authentication.yml
+versioning:
+  style: path-segment
+  current: v0
+  base: https://api.optilogic.app/v0
+  note: 'The version is the FIRST path segment and is validated before auth: an unrecognised first segment
+    returns 403 {"error":"Invalid Api Version: ..."} rather than 404. Observed live 2026-08-26.'
+  info_version: 1.0.0
+idempotency:
+  supported: false
+  header: null
+  evidence: No Idempotency-Key or equivalent request header appears on any of the 67 operations in the
+    published Swagger document, and the docs do not describe safe retry semantics for POST /{workspace}/job
+    or the jobBatch operations.
+  natural_idempotency: PUT operations on custom columns, custom tables, tags and labels are replace-semantics
+    and therefore naturally idempotent; the POST job-queueing operations are not.
+pagination:
+  supported: false
+  evidence: No limit/offset/page/cursor parameter appears on any list operation. GET /{workspace}/jobs
+    exposes filters (status, tags, runSecsMin, runSecsMax, history) but no page control; collections are
+    returned whole.
+filtering:
+  supported: true
+  examples:
+  - operation: GET /{workspace}/jobs
+    params:
+    - status
+    - tags
+    - runSecsMin
+    - runSecsMax
+    - history
+  - operation: GET /storage/{storageName}/db-objects
+    params:
+    - schema
+    - tags
+    - type
+field_expansion:
+  supported: false
+metadata:
+  supported: true
+  mechanism: Storage devices carry free-form tags (list) and labels (key/value) with dedicated add/replace/remove
+    operations under /storage/{storageName}/tags and /storage/{storageName}/labels. Jobs carry tags.
+request_id_tracing:
+  supported: true
+  field: correlationId
+  location: response body (error envelope)
+  note: No request-id RESPONSE HEADER is documented; the correlation id is only observable on error bodies.
+error_envelope:
+  format: vendor-json
+  schema: '#/definitions/Error'
+  see: errors/optilogic-problem-types.yml
+rate_limit_signaling:
+  documented: false
+  headers: []
+  status_on_exhaustion: null
+  note: No 429 response and no X-RateLimit-*/RateLimit-*/Retry-After header is declared anywhere in the
+    Swagger document or the public help centre. The only published throughput control is the per-account
+    concurrent-solve entitlement returned by the account endpoint. See rate-limits/optilogic-rate-limits.yml.
+async_model:
+  style: job-queue
+  note: 'Long-running work is a job: POST /{workspace}/job returns 202 with a jobKey, and the client polls
+    GET /{workspace}/job/{jobKey}, its ledger and its metrics. Six operations return 202. There are no
+    webhooks or callbacks in the contract, so completion is poll-only.'
+reversibility:
+  applicable: true
+  grade: documented
+  note: Every destructive surface in the contract has an explicit reversal or stop operation, but Optilogic
+    publishes no retention or reversal WINDOW for any of them, so this grades documented rather than verified.
+    No window is asserted here because none is stated in the provider docs.
+  write_surfaces:
+  - surface: job execution
+    write: POST /{workspace}/job (Queue a job)
+    reversal: DELETE /{workspace}/job/{jobKey} (Stop a queued or running job)
+    operationId: null
+    window: null
+    window_source: null
+    note: Stops a queued or running job. Work already completed by the job (files written, database rows
+      changed) is not rolled back.
+  - surface: batch job execution
+    write: POST /{workspace}/jobBatch/jobify, /jobBatch/backToBack
+    reversal: DELETE /{workspace}/job/{jobKey} per job key
+    operationId: null
+    window: null
+    window_source: null
+  - surface: workspace file
+    write: POST /{workspace}/file/{directoryPath}/{filename} (Upload)
+    reversal: null
+    window: null
+    window_source: null
+    note: DELETE removes a file; no restore/undelete or trash operation is published. This is the one
+      irreversible write in the contract.
+  - surface: custom column
+    write: POST /storage/{storageName}/custom-column
+    reversal: DELETE /storage/{storageName}/custom-column, plus POST /storage/{storageName}/custom-columns/repair
+    operationId: null
+    window: null
+    window_source: null
+    note: GET /storage/{storageName}/custom-columns/validate then POST .../repair is a documented remediation
+      path back to a consistent schema.
+  - surface: custom table
+    write: POST /storage/{storageName}/custom-table
+    reversal: DELETE /storage/{storageName}/custom-table
+    operationId: null
+    window: null
+    window_source: null
+  - surface: storage table data
+    write: POST /storage/{storageName}/empty-tables (Delete all data rows)
+    reversal: null
+    window: null
+    window_source: null
+    note: No undo. POST /storage/{storageName}/clone exists and can be used to take a duplicate BEFORE
+      emptying, which is the only published safety net.
+  - surface: storage access sharing
+    write: POST /storage/{storageName}/share/access
+    reversal: DELETE /storage/{storageName}/share/access
+    operationId: null
+    window: null
+    window_source: null
+  - surface: storage ownership
+    write: POST /storage/{storageName}/reassign
+    reversal: null
+    window: null
+    window_source: null
+    note: Reassigning storage ownership has no published inverse operation; the new owner would have to
+      reassign it back.
+  - surface: secret
+    write: POST /secret/{secretName}, PUT /secret/{secretName}
+    reversal: DELETE /secret/{secretName}
+    operationId: null
+    window: null
+    window_source: null
+dry_run_mode:
+  supported: false
+  note: No dry-run, preview or validate-only flag on any write operation. The closest published affordance
+    is GET /storage/{storageName}/custom-columns/validate, which checks state rather than rehearsing a
+    write.
+cross_links:
+  errors: errors/optilogic-problem-types.yml
+  lifecycle: lifecycle/optilogic-lifecycle.yml
+  authentication: authentication/optilogic-authentication.yml
+  rate_limits: rate-limits/optilogic-rate-limits.yml
+  data_model: data-model/optilogic-data-model.yml

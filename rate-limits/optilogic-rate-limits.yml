@@ -1,0 +1,35 @@
+generated: '2026-08-26'
+method: searched
+source:
+- https://api-docs.optilogic.app/documentation
+- https://optilogic.com/help-center/connecting-via-api
+- openapi/optilogic-rest-api-openapi.json
+limit_count: 0
+headers: []
+status_on_exhaustion: null
+note: Optilogic publishes no request rate limits. No 429 response is declared on any of the 67 operations
+  in the Swagger document, and no X-RateLimit-*, RateLimit-* or Retry-After header appears in any response
+  definition. The public help centre does not document a limit either.
+related_controls:
+- control: concurrent solves
+  scope: per-account
+  limit: null
+  evidence: The account endpoint returns "how many concurrent solves you have access to" (Optilogic help
+    centre, Connecting via API). The number is per-account and entitlement-driven; no public value is
+    published.
+  docs: https://optilogic.com/help-center/connecting-via-api
+- control: api key lifetime
+  scope: per-key
+  limit: 3600 seconds
+  evidence: '"Once authenticated you will be provided with an API key that remains active for an hour."
+    App keys generated in the app do not expire.'
+  docs: https://optilogic.com/help-center/generating-app-and-api-keys/
+- control: tier entitlement
+  scope: per-account
+  limit: null
+  evidence: A free account has test API access only and cannot upload/download or solve models; full API
+    access requires a paid account. Stated in the Swagger info.description and the help centre.
+  docs: https://optilogic.app/#/user-account?tab=pricing
+agent_impact: An agent calling this API has no runtime backpressure signal. There is no 429 to detect
+  and no Retry-After to obey, so a client cannot distinguish throttling from a generic failure and must
+  implement its own pacing.

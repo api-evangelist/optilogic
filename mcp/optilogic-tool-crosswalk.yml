@@ -1,0 +1,435 @@
+generated: '2026-08-26'
+method: derived
+source:
+- mcp/optilogic-mcp.yml
+- openapi/optilogic-rest-api-openapi.json
+- https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
+surfaces:
+  openapi:
+    file: openapi/optilogic-rest-api-openapi.json
+    spec: swagger 2.0
+    base: https://api.optilogic.app/v0
+    operations: 67
+    gated: api-key (X-API-KEY); free accounts get test access only
+  mcp:
+    url: https://mcp.optilogic.app/mcp
+    gated: oauth 2.1 — anonymous tools/list returns 401
+  graphql: null
+coverage:
+  mcp_tools_known: 0
+  crosswalked: 0
+  mcp_only: 0
+  rest_only: 67
+  note: The crosswalk cannot be populated. The MCP tool list is OAuth-gated and Optilogic publishes no
+    tool names anywhere public, so there is no left-hand side to bind. Mapping by guessed name would fabricate
+    an inputSchema, which this pipeline does not do.
+crosswalk: []
+mcp_only: []
+rest_only:
+- operation: POST /refreshApiKey
+  summary: Create a new API key
+  tags:
+  - authentication
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /workspaces
+  summary: Get a list of available workspaces in an account
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}
+  summary: Get information about a workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/jobs
+  summary: List the jobs for a specific workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/jobs/stats
+  summary: Get the stats only for jobs for a specific workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/job
+  summary: Queue a job
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/job/{jobKey}
+  summary: Get job information
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /{workspace}/job/{jobKey}
+  summary: Stop a queued or running job
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/jobBatch/jobify
+  summary: Queue a list of jobs
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/jobBatch/jobify/searchNRun
+  summary: Queue a list of jobs from a list of search terms
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/jobBatch/backToBack
+  summary: Run a list of python modules
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/jobBatch/backToBack/searchNRun
+  summary: Run a list of matching python modules.
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/files
+  summary: List all user files in the workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/job/{jobKey}/ledger
+  summary: Get records from the specified job's ledger
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/job/{jobKey}/metrics
+  summary: Get metrics gathered while the job was running
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/job/{jobKey}/metrics/stats
+  summary: Get a roll-up of metric statistics gathered while the job was running
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/file/copy
+  summary: Copy a file within a workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/file/share
+  summary: Share a file with other users
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /{workspace}/file/{directoryPath}/{filename}
+  summary: Get a file from a specific workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/file/{directoryPath}/{filename}
+  summary: Upload a file to a workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /{workspace}/file/{directoryPath}/{filename}
+  summary: Delete a specific file from a workspace
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /{workspace}/folder/share
+  summary: Share a folder with other users
+  tags:
+  - workspace
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /job/db-data-export/list
+  summary: List DB Data Export jobs
+  tags:
+  - job
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /job/db-data-export/{jobKey}
+  summary: Get job information for a DB Data Export job
+  tags:
+  - job
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storages/db-connection-strings
+  summary: Get the connection information for all SQL storage items
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/connection-string
+  summary: Get the connection information for a SQL storage item
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/db-objects
+  summary: Get database objects (stats, tables, and views) for a SQL storage item
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/schema
+  summary: Get database schema (tables and views) for a SQL storage item
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/custom-tables
+  summary: Get custom tables
+  tags:
+  - 'storage : custom tables'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/custom-table
+  summary: Create a custom table.
+  tags:
+  - 'storage : custom tables'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/custom-table
+  summary: Rename a custom table.
+  tags:
+  - 'storage : custom tables'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /storage/{storageName}/custom-table
+  summary: Delete a custom table.
+  tags:
+  - 'storage : custom tables'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/customizations
+  summary: Get database schema (tables and views) for a SQL storage item
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storages/db-column-types
+  summary: Get supported column data types
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/custom-column
+  summary: Create a new custom column in a database table
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/custom-column
+  summary: Get details of a single custom column in a database table
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/custom-column
+  summary: Update a custom column
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /storage/{storageName}/custom-column
+  summary: Delete a custom column
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/custom-columns
+  summary: Get all custom columns for a table
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/custom-columns/validate
+  summary: Validate custom columns
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/custom-columns/repair
+  summary: Repair custom columns
+  tags:
+  - 'storage : custom columns'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /storage/{storageName}/labels
+  summary: 'Remove custom key/value pars of labels. (Pass a list of string keys to remove. i.e.: ?labels=["key1","key2","key3"])'
+  tags:
+  - 'storage : labels'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/labels
+  summary: Get labels
+  tags:
+  - 'storage : labels'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/labels
+  summary: Add labels
+  tags:
+  - 'storage : labels'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/labels
+  summary: Replace labels
+  tags:
+  - 'storage : labels'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /storage/{storageName}/tags
+  summary: Remove tags
+  tags:
+  - 'storage : tags'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/tags
+  summary: Get tags
+  tags:
+  - 'storage : tags'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/tags
+  summary: Add tags
+  tags:
+  - 'storage : tags'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/tags
+  summary: Replace tags
+  tags:
+  - 'storage : tags'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storage/{storageName}/tables
+  summary: Get tables information for a SQL storage item
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/empty-tables
+  summary: Delete all data rows from specified tables in a SQL storage item
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/db-data-export
+  summary: Export all rows from selected tables/views, or the results of a query in a SQL storage item
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/file/move
+  summary: Move a file within a storage device
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/folder/move
+  summary: Move a folder within a storage device
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /storage/{storageName}/folder/copy
+  summary: Copy a folder within a storage device or from one storage device to another
+  tags:
+  - storage
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/reassign
+  summary: Reassigns storage ownership to a specified user
+  tags:
+  - 'storage : sharing'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/share
+  summary: Sends a copy to a specified user
+  tags:
+  - 'storage : sharing'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/clone
+  summary: Duplicates a storage
+  tags:
+  - 'storage : sharing'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /storage/{storageName}/share/access
+  summary: Shares storage access to a specified user
+  tags:
+  - 'storage : sharing'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /storage/{storageName}/share/access
+  summary: Removed shared storage access from a specified user
+  tags:
+  - 'storage : sharing'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storages/db-templates
+  summary: Get a list of database template versions used to create a new database.
+  tags:
+  - 'storage : templates'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /storages/db-template-sets
+  summary: Get a distinct list of database templates and release statuses associated with each one.
+  tags:
+  - 'storage : templates'
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /secrets
+  summary: Get a list of stored secrets
+  tags:
+  - utility
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: GET /secret/{secretName}
+  summary: Get a stored secret by name
+  tags:
+  - utility
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: POST /secret/{secretName}
+  summary: Add a new secret
+  tags:
+  - utility
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: PUT /secret/{secretName}
+  summary: Change one or more fields on a stored secret
+  tags:
+  - utility
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+- operation: DELETE /secret/{secretName}
+  summary: Delete a secret
+  tags:
+  - utility
+  reason: No known MCP tool; the MCP surface fronts Ada sessions over model databases, not the workspace/job/storage
+    control plane.
+divergence_note: These two surfaces are genuinely different products rather than two projections of one
+  core. The REST API operates on workspaces, Andromeda jobs, files and SQL storage devices. The MCP server
+  relays natural-language prompts to Ada against named Cosmic Frog / DataStar / Postgres databases. An
+  agent that needs to queue a solve must use the REST API; an agent that needs to reason over a model
+  database uses MCP. Neither can substitute for the other.

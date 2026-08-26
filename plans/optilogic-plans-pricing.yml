@@ -1,0 +1,33 @@
+generated: '2026-08-26'
+method: searched
+source:
+- https://optilogic.com/compare-plans/
+- https://optilogic.com/pricing/
+- https://optilogic.app/#/user-account?tab=pricing
+- https://api-docs.optilogic.app/documentation
+plan_count: 0
+currency: null
+plans: []
+note: Optilogic publishes no public pricing. https://optilogic.com/pricing/ returns 404 and https://optilogic.com/compare-plans/
+  returns 200 but renders the marketing homepage with a "Create a Free Account" call to action and no
+  tiers, prices or quotas. The only pricing surface the company names is https://optilogic.app/#/user-account?tab=pricing,
+  which is inside the authenticated application (linked from the API documentation as "upgrade to a paid
+  account to gain access").
+known_tier_facts:
+- tier: free account
+  price: null
+  api_access: test only
+  evidence: '"A free account provides test API access, but does not allow you to upload/download or solve
+    models." (Optilogic help centre)'
+- tier: paid account
+  price: null
+  api_access: full
+  evidence: 'Swagger info.description: "All Optilogic users can view the endpoint documentation below,
+    upgrade to a paid account to gain access."'
+evidence:
+- url: https://optilogic.com/pricing/
+  status: 404
+- url: https://optilogic.com/compare-plans/
+  status: 200
+- url: https://optilogic.app/#/user-account?tab=pricing
+  status: 200

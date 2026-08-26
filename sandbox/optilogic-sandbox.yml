@@ -1,0 +1,29 @@
+generated: '2026-08-26'
+method: searched
+source:
+- https://optilogic.com/help-center/connecting-via-api
+- https://api-docs.optilogic.app/documentation
+- https://optilogic.com/help-center/generating-app-and-api-keys/
+sandbox_published: false
+test_host: null
+test_key_prefix: null
+test_data: []
+test_clock: false
+fixtures: false
+modes:
+- mode: free account test access
+  host: https://api.optilogic.app/v0
+  key: same X-API-KEY credential as production
+  capabilities: Read-only exploration of the API.
+  restrictions: Cannot upload or download files and cannot solve models.
+  evidence: '"A free account provides test API access, but does not allow you to upload/download or solve
+    models." (Optilogic help centre)'
+interactive_console:
+  available: true
+  url: https://api-docs.optilogic.app/documentation
+  note: The documentation is a live Swagger UI with a "Quick Start" form that mints an API key from account
+    credentials and a Try-it-out console against the production host.
+note: There is NO separate sandbox host, no test-mode key prefix distinguishable from a live key, and
+  no published test fixtures, magic identifiers or test clock. Free-tier "test access" runs against the
+  same production base URL with the same credential shape, so a client cannot tell from the key or the
+  host whether it is in a test posture. No test values are invented here.

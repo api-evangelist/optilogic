@@ -1,0 +1,121 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/optilogic-rest-api-openapi.json
+note: Derived from the 99 definitions and the path-parameter graph of the published Swagger 2.0 document.
+  The Swagger has no $ref-based parent/child links between top-level resources, so relationships are derived
+  from the path hierarchy and the shared identifier parameters (workspace, jobKey, storageName, secretName)
+  rather than from embedded references.
+identifiers:
+- name: workspace
+  shape: name string
+  used_by: 20
+- name: jobKey
+  shape: uuid
+  used_by: 6
+- name: storageName
+  shape: name string
+  used_by: 34
+- name: secretName
+  shape: name string
+  used_by: 4
+- name: correlationId
+  shape: uuid
+  note: present on every error envelope; the only tracing identifier the API returns
+entity_count: 12
+definition_count: 99
+entities:
+- name: Account
+  schema: '#/definitions/Account'
+  description: 'The Optilogic user account: username, email, concurrent solve entitlement and workspace
+    count.'
+- name: Workspace
+  schema: '#/definitions/Workspace'
+  description: A named compute + storage workspace. The {workspace} path parameter on 20 operations.
+  key: workspace (name)
+- name: Job
+  schema: '#/definitions/Job'
+  description: 'An Andromeda job: a queued or running execution of a Python module inside a workspace.'
+  key: jobKey (uuid)
+- name: JobLedger
+  schema: '#/definitions/JobLedger'
+  description: Ordered log records emitted by a job run.
+- name: JobMetrics
+  schema: '#/definitions/JobMetrics'
+  description: Resource metrics sampled while a job was running.
+- name: File
+  schema: '#/definitions/File'
+  description: A file under the workspace /projects directory, addressed by directoryPath + filename.
+  key: directoryPath + filename
+- name: Storage
+  schema: '#/definitions/StorageInfo'
+  description: A storage device (SQL/Postgres database or file store) owned or shared with the account.
+  key: storageName
+- name: CustomColumn
+  schema: '#/definitions/CustomColumn'
+  description: A user-added column on a table inside a SQL storage device.
+  key: storageName + table + columnName
+- name: CustomTable
+  schema: '#/definitions/GetCustomTables'
+  description: A user-created table inside a SQL storage device.
+  key: storageName + tableName
+- name: DbDataExportJob
+  schema: '#/definitions/DbDataExportJob'
+  description: An asynchronous export of rows from selected tables/views of a SQL storage device.
+  key: jobKey
+- name: Secret
+  schema: '#/definitions/Secret'
+  description: An account-scoped stored secret retrievable by name.
+  key: secretName
+- name: DBTemplate
+  schema: '#/definitions/DBTemplates'
+  description: A versioned database template used to create a new storage device (Cosmic Frog model schema
+    versions).
+relationships:
+- from: Account
+  to: Workspace
+  type: has_many
+  via: GET /workspaces
+- from: Workspace
+  to: Job
+  type: has_many
+  via: GET /{workspace}/jobs
+- from: Workspace
+  to: File
+  type: has_many
+  via: GET /{workspace}/files
+- from: Job
+  to: JobLedger
+  type: has_many
+  via: GET /{workspace}/job/{jobKey}/ledger
+- from: Job
+  to: JobMetrics
+  type: has_many
+  via: GET /{workspace}/job/{jobKey}/metrics
+- from: Job
+  to: Workspace
+  type: belongs_to
+  via: '{workspace} path parameter'
+- from: Account
+  to: Storage
+  type: has_many
+  via: GET /storages/db-connection-strings
+- from: Storage
+  to: CustomColumn
+  type: has_many
+  via: GET /storage/{storageName}/custom-columns
+- from: Storage
+  to: CustomTable
+  type: has_many
+  via: GET /storage/{storageName}/custom-tables
+- from: Storage
+  to: DbDataExportJob
+  type: has_many
+  via: POST /storage/{storageName}/db-data-export
+- from: Storage
+  to: DBTemplate
+  type: belongs_to
+  via: GET /storages/db-templates
+- from: Account
+  to: Secret
+  type: has_many
+  via: GET /secrets

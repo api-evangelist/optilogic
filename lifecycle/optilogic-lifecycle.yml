@@ -1,0 +1,47 @@
+generated: '2026-08-26'
+method: searched
+source:
+- https://api-docs.optilogic.app/documentation
+- https://optilogic.com/resources/latest-updates
+- openapi/optilogic-rest-api-openapi.json
+versioning:
+  scheme: path-segment
+  current: v0
+  info_version: 1.0.0
+  policy_published: false
+  note: The API has been published as /v0 with info.version 1.0.0. No version-support, sunset or migration
+    policy is published.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  evidence: 'No operation in the Swagger document carries deprecated: true, and no Deprecation/Sunset
+    response header is declared. No deprecation policy page exists on optilogic.com.'
+status_page:
+  published: false
+  url: null
+  evidence: https://status.optilogic.com/ did not resolve (curl exit, no HTTP response) on 2026-08-26.
+    No status/uptime page is linked from optilogic.com, the help centre or the API documentation.
+sla:
+  published: false
+  note: No public SLA. The account endpoint returns a per-account concurrent-solve entitlement, which
+    is the only published capacity commitment.
+changelog:
+  published: true
+  url: https://optilogic.com/resources/latest-updates
+  cadence: monthly
+  scope: product-wide, not API-specific
+  note: Monthly "What's New in Optilogic?" product updates. There is no API-specific changelog and no
+    dated entry for the REST API itself.
+observations:
+- finding: An unconfigured second Swagger UI is published at https://pioneer-api-docs.optilogic.app/ (HTTP
+    200). Its swagger-initializer.js still points at https://petstore.swagger.io/v2/swagger.json — the
+    Swagger UI default — so the host serves the demo Petstore API rather than any Optilogic contract.
+  observed: '2026-08-26'
+  status: 200
+  impact: A developer who finds this host through search reads someone else's API. The live Optilogic
+    contract is at https://api-docs.optilogic.app/swagger-ui/swagger.json.
+- finding: The API is documented as Swagger 2.0. No OpenAPI 3.x version of the contract is published.
+  observed: '2026-08-26'

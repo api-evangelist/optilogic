@@ -1,0 +1,65 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Optilogic REST API
+  version: 1.0.0
+extends: openapi/optilogic-rest-api-openapi.json
+x-generated: '2026-08-26'
+x-method: generated
+x-source: openapi/optilogic-rest-api-openapi.json
+x-note: Captures API Evangelist enhancements only. The original Swagger 2.0 document is never mutated;
+  these actions are the record of what we would add. The largest gaps are 67 operations with no operationId
+  and zero response examples.
+actions:
+- target: $.info
+  description: Record the machine-discoverable location of the contract and the base the OptiJS client
+    hard-codes.
+  update:
+    x-spec-url: https://api-docs.optilogic.app/swagger-ui/swagger.json
+    x-api-base: https://api.optilogic.app/v0
+    x-contact-support: support@optilogic.com
+- target: $.info
+  description: Surface the tier gate stated in prose in info.description as structured data.
+  update:
+    x-access-tier:
+      free: test access only; no upload/download and no model solve
+      paid: full API access
+      upgrade: https://optilogic.app/#/user-account?tab=pricing
+- target: $.securityDefinitions.APIKeyHeader
+  description: Record the credential lifetime, which is documented only in the help centre.
+  update:
+    x-credential-lifetime: API keys from /refreshApiKey expire after 3600 seconds; App keys created in
+      the Optilogic app do not expire.
+    x-issuance-operation: POST /refreshApiKey
+    x-docs: https://optilogic.com/help-center/generating-app-and-api-keys/
+- target: $.paths['/{workspace}/job'].post
+  description: Flag the absence of idempotency on the primary write operation.
+  update:
+    x-idempotent: false
+    x-agent-note: Queueing a job is not idempotent and carries no idempotency key. A retried POST queues
+      a second job. The only reversal is DELETE /{workspace}/job/{jobKey}, which stops execution but does
+      not roll back work already done.
+- target: $.paths['/storage/{storageName}/empty-tables'].post
+  description: Mark the irreversible destructive operation.
+  update:
+    x-destructive: true
+    x-reversible: false
+    x-agent-note: Deletes all data rows from the named tables with no undo. POST /storage/{storageName}/clone
+      before calling this is the only published safety net.
+- target: $.paths['/storage/{storageName}/reassign'].post
+  description: Mark the ownership transfer as having no published inverse.
+  update:
+    x-destructive: true
+    x-reversible: false
+    x-agent-note: Transfers storage ownership to another user. There is no inverse operation available
+      to the original owner once transferred.
+- target: $
+  description: Record the contract-level gaps this overlay cannot fix without provider action.
+  update:
+    x-api-evangelist-gaps:
+    - No operationId on any of the 67 operations, so no operation can be referenced by a stable identifier.
+    - Zero response examples across the whole document.
+    - No 429 response and no rate-limit response headers declared.
+    - No pagination on any list operation.
+    - Published as Swagger 2.0; no OpenAPI 3.x version exists.
+    - An unconfigured second Swagger UI at https://pioneer-api-docs.optilogic.app/ still serves the Petstore
+      demo spec.

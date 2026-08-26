@@ -1,0 +1,22 @@
+generated: '2026-08-26'
+method: generated
+source: openapi/optilogic-rest-api-openapi.json
+note: The Optilogic Swagger 2.0 document declares no operationId on any of its 67 operations, so every
+  skill grounds its steps on the verbatim HTTP method + path from the published contract.
+skill_count: 3
+skills:
+- file: skills/optilogic-authenticate-and-handle-errors.md
+  name: optilogic-authenticate-and-handle-errors
+  description: Obtain and refresh Optilogic credentials, choose between a one-hour API key and a non-expiring
+    App key, and interpret every documented failure the API returns.
+  operations: 6
+- file: skills/optilogic-manage-model-storage.md
+  name: optilogic-manage-model-storage
+  description: Work with Optilogic SQL storage devices - connection strings, schema, custom columns and
+    custom tables - without leaving a model database in an inconsistent state.
+  operations: 14
+- file: skills/optilogic-run-and-monitor-a-job.md
+  name: optilogic-run-and-monitor-a-job
+  description: Queue a Python model run on the Optilogic platform and follow it to completion, including
+    the ledger and metrics an agent needs to explain what happened.
+  operations: 7

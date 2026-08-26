@@ -1,0 +1,106 @@
+generated: '2026-08-26'
+method: probed
+source: live GET of /.well-known/* on every apis.yml and OpenAPI servers host
+hosts:
+- host: mcp.optilogic.app
+  documents:
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 200
+    file: optilogic-oauth-protected-resource.json
+    note: RFC 9728 protected resource metadata, referenced by the WWW-Authenticate header on an anonymous
+      MCP call.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: optilogic-oauth-authorization-server.json
+    note: RFC 8414 authorization server metadata; issuer is the Optilogic Keycloak realm, with dynamic
+      client registration at /oauth/register.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: auth.accounts.optilogic.app
+  documents:
+  - path: /auth/realms/che/.well-known/openid-configuration
+    status: 200
+    file: optilogic-openid-configuration.json
+    note: Keycloak realm "che". scopes_supported includes a dedicated mcp-access scope.
+- host: optilogic.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 200
+    file: ../llms/optilogic-llms.txt
+    note: Not a /.well-known path; recorded here because it was probed in the same sweep and is the only
+      agent-facing document optilogic.com serves.
+- host: api.optilogic.app
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    note: 'The API gateway parses the first path segment as an API version, so every /.well-known/* path
+      returns 403 {"error":"Invalid Api Version: ''.well-known''"} rather than 404. No document is served.'
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/agent-card.json
+    status: 403
+  - path: /.well-known/agent.json
+    status: 403
+- host: api-docs.optilogic.app
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: optilogic.app
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+summary:
+  documents_served: 3
+  security_txt: false
+  api_catalog: false
+  agent_card: false
+  note: No security.txt on any host, so no SecurityTxt pointer is emitted. No agent card on any host,
+    so no a2a/ artifact is written at all.

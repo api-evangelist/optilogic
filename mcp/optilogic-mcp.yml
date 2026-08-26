@@ -1,0 +1,68 @@
+generated: '2026-08-26'
+method: probed
+source:
+- https://mcp.optilogic.app/mcp
+- https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
+- https://mcp.optilogic.app/.well-known/oauth-protected-resource/mcp
+name: Optilogic MCP Server (Ada Connector)
+status: published
+deployment:
+  mode: remote
+  endpoint: https://mcp.optilogic.app/mcp
+  auth: oauth
+  verified: probed
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://mcp.optilogic.app/mcp
+  method: POST tools/list
+  http_status: 401
+  content_type: text/plain; charset=utf-8
+  body: no bearer token
+  www_authenticate: Bearer resource_metadata="https://mcp.optilogic.app/.well-known/oauth-protected-resource/mcp"
+  note: A protocol-correct authenticated MCP server. The endpoint is live and reachable; the tool list
+    is auth-gated, so no tool inventory is recorded here rather than a guessed one.
+oauth:
+  protected_resource_metadata: https://mcp.optilogic.app/.well-known/oauth-protected-resource/mcp
+  authorization_server_metadata: https://mcp.optilogic.app/.well-known/oauth-authorization-server
+  issuer: https://auth.accounts.optilogic.app/auth/realms/che
+  authorization_endpoint: https://mcp.optilogic.app/oauth/authorize
+  token_endpoint: https://auth.accounts.optilogic.app/auth/realms/che/protocol/openid-connect/token
+  registration_endpoint: https://mcp.optilogic.app/oauth/register
+  dynamic_client_registration: true
+  pkce:
+  - S256
+  grant_types:
+  - authorization_code
+  - refresh_token
+  scopes_advertised:
+  - openid
+  realm_scopes:
+  - openid
+  - offline_access
+  - profile
+  - email
+  - address
+  - phone
+  - roles
+  - web-origins
+  - microprofile-jwt
+  - mcp-access
+  note: The MCP authorization-server document advertises only the openid scope, but the underlying Keycloak
+    realm publishes a dedicated mcp-access scope.
+client_setup:
+  product_name: Ada Claude Connector
+  client: Claude custom connector
+  directory: https://claude.ai/directory/optilogic
+  docs: https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
+  admin_setup_required: false
+  note: 'Per the provider help centre: any user can add the connector to their own Claude account and
+    authenticate with Optilogic directly. The connector attaches named Cosmic Frog models, DataStar projects
+    or other Postgres databases to an Ada session and relays the prompt.'
+tools: []
+tools_note: NOT RECORDED. Anonymous tools/list returns 401, so the live inputSchema set requires an authenticated
+  introspection. The provider help centre describes the capability in prose only ("read-only tools (like
+  listing databases)", "Show me what databases you have access to in Optilogic") and publishes no tool
+  names, so nothing is derived here.
+relationship_to_rest_api: The MCP server is NOT a projection of the REST API in openapi/. The REST API
+  is a workspace/job/storage control plane; the MCP server fronts Ada, an agentic session over model databases.
+  See mcp/optilogic-tool-crosswalk.yml.

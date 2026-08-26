@@ -1,0 +1,44 @@
+generated: '2026-08-26'
+method: searched
+probe: true
+source: https://trust.optilogic.com/
+url: https://trust.optilogic.com/
+certifications:
+- SOC 2 Type II
+- CMMC Level 1
+evidence:
+- source: https://trust.optilogic.com/
+  keywords:
+  - soc 2 type ii
+  - cmmc level 1
+  - trust center
+  - safebase
+platform: SafeBase
+certification_detail:
+- name: SOC 2 Type II
+  status: completed
+  as_of: 2025-05
+  evidence: '"As of May, 2025, Optilogic has successfully completed SOC 2 Type II." (trust.optilogic.com)'
+- name: CMMC Level 1
+  status: held
+  framework: NIST 800-171/172, US Department of Defense
+  evidence: Trust center states CMMC Level 1 and that Optilogic is "continuing to harden its cybersecurity
+    posture by proceeding to implement CMMC Level 2 compliance."
+- name: CMMC Level 2
+  status: in-progress
+  evidence: Stated as in implementation on the trust center; not yet held.
+documents_gated:
+- SOC 2 Report
+- Data Flow Diagram (DFD)
+- Web App Pentest Report
+- CMMC Certification documentation
+security_contact: opti-infosec@optilogic.com
+access: The trust center index is public. The underlying reports (SOC 2, pentest, DFD) are request-gated
+  behind the SafeBase portal.
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://trust.optilogic.com/
+  http_status_direct_curl: 403
+  note: A direct curl with a browser User-Agent is answered 403 by the SafeBase edge (bot challenge, 5,730-byte
+    body). The page demonstrably exists and renders for an ordinary client; the certification detail above
+    was read from the rendered page.

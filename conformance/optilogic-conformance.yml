@@ -1,0 +1,92 @@
+generated: '2026-08-26'
+method: derived
+source:
+- openapi/optilogic-rest-api-openapi.json
+- https://mcp.optilogic.app/.well-known/oauth-authorization-server
+- https://auth.accounts.optilogic.app/auth/realms/che/.well-known/openid-configuration
+- https://trust.optilogic.com/
+standards:
+- id: openapi
+  conforms: false
+  evidence: 'The published contract is Swagger 2.0 (swagger: "2.0"), not OpenAPI 3.x.'
+- id: swagger2
+  conforms: true
+  evidence: https://api-docs.optilogic.app/swagger-ui/swagger.json parses as swagger 2.0 with 50 paths,
+    67 operations and 99 definitions.
+- id: oauth2
+  conforms: true
+  evidence: The MCP server advertises OAuth 2.0 authorization-server metadata (RFC 8414) at https://mcp.optilogic.app/.well-known/oauth-authorization-server
+    with authorization_code + refresh_token grants and S256 PKCE. The REST API itself is API-key only.
+- id: oidc
+  conforms: true
+  evidence: https://auth.accounts.optilogic.app/auth/realms/che/.well-known/openid-configuration returns
+    a complete OpenID Provider configuration (Keycloak realm "che") with userinfo, jwks and the openid/profile/email/offline_access
+    scopes.
+- id: rfc9728
+  conforms: true
+  evidence: 'HTTP 401 from https://mcp.optilogic.app/mcp carries WWW-Authenticate: Bearer resource_metadata="https://mcp.optilogic.app/.well-known/oauth-protected-resource/mcp",
+    and that document returns 200 with resource + authorization_servers + bearer_methods_supported.'
+- id: rfc7591
+  conforms: true
+  evidence: registration_endpoint https://mcp.optilogic.app/oauth/register is advertised, so OAuth dynamic
+    client registration is supported (this is what lets an MCP client connect without a pre-provisioned
+    client id).
+- id: pkce
+  conforms: true
+  evidence: 'code_challenge_methods_supported: ["S256"] on the MCP authorization-server metadata.'
+- id: mcp
+  conforms: true
+  evidence: A live remote MCP endpoint is served at https://mcp.optilogic.app/mcp; anonymous tools/list
+    returns 401 "no bearer token" with an RFC 9728 challenge, which is protocol-correct behaviour for
+    an authenticated MCP server.
+- id: rfc9457
+  conforms: false
+  evidence: Errors use a vendor envelope (result/error/correlationId), not application/problem+json.
+- id: idempotency
+  conforms: false
+  evidence: No idempotency key mechanism on any of the 67 operations.
+- id: pagination
+  conforms: false
+  evidence: No page/cursor/limit/offset parameter on any list operation.
+- id: json:api
+  conforms: false
+  evidence: Plain JSON envelopes; no JSON:API media type or document structure.
+- id: asyncapi
+  conforms: false
+  evidence: No event, streaming or webhook surface is published. Long-running work is polled through the
+    job endpoints.
+- id: llmstxt
+  conforms: true
+  evidence: https://optilogic.com/llms.txt returns 200 text/plain, 6,520 bytes, link-first structure,
+    last updated November 2025.
+- id: soc2
+  conforms: true
+  evidence: SOC 2 Type II completed as of May 2025, per the Optilogic SafeBase trust center at https://trust.optilogic.com/.
+    The report itself is request-gated.
+- id: cmmc
+  conforms: true
+  evidence: CMMC Level 1 (NIST 800-171/172) stated on the trust center; CMMC Level 2 described as in implementation,
+    not held.
+domain_standards:
+  market: supply chain design / network optimization
+  searched:
+  - GS1
+  - EDIFACT
+  - ANSI X12
+  - ISO 20022
+  - OAGIS
+  - UN/CEFACT
+  - EPCIS
+  found: []
+  evidence: 'The contract is a compute/workspace/storage control plane — jobs, files, SQL storage devices
+    — not a supply chain data interchange surface. No supply chain interchange standard (GS1, EDIFACT,
+    X12, EPCIS, OAGIS) appears in any path, definition, tag or description in the 218KB Swagger document.
+    Reward-only dimension: no domain standard applies and none is asserted.'
+compliance:
+  certifications:
+  - SOC 2 Type II
+  - CMMC Level 1
+  in_progress:
+  - CMMC Level 2
+  source: https://trust.optilogic.com/
+  see: security/optilogic-trust-center.yml

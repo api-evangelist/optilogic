@@ -1,0 +1,101 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/optilogic-rest-api-openapi.json
+format: vendor-json
+note: The Optilogic REST API does not use RFC 9457 application/problem+json. Every documented 4xx response
+  returns the vendor Error envelope defined in the Swagger document as definitions.Error.
+envelope:
+  media_type: application/json
+  schema: '#/definitions/Error'
+  fields:
+  - name: result
+    type: string
+    note: literal "error" on failure
+  - name: error
+    type: string
+    note: human-readable failure reason
+  - name: correlationId
+    type: string
+    format: uuid
+    note: per-request trace id, quote this to Optilogic support
+envelope_variants:
+- CustomColumnsResponseError
+- Error
+- ErrorFileCopy
+- ErrorFileShare
+- ErrorFolderDelete
+- ErrorFolderShare
+- ErrorStorage
+- ErrorStorageFile
+- Forbidden
+status_code_coverage:
+- status: 200
+  operations: 60
+- status: 201
+  operations: 1
+- status: 202
+  operations: 6
+- status: 400
+  operations: 62
+- status: 401
+  operations: 62
+- status: 403
+  operations: 47
+- status: 404
+  operations: 59
+- status: 412
+  operations: 2
+problem_types:
+- status: 400
+  title: Bad Request
+  operations: 62
+  detail: 'Malformed or missing parameter. Observed live: GET https://api.optilogic.app/openapi.json returns
+    403 {"error":"Invalid Api Version: ''openapi.json''"} because the first path segment is parsed as
+    the API version.'
+  remediation: Check required path/query parameters and that the version segment is /v0.
+- status: 401
+  title: Unauthorized
+  operations: 62
+  detail: 'Missing or expired credential. Observed live: GET https://api.optilogic.app/v0/openapi.json
+    returns 401 {"error":"Header ''x-api-key'' missing"}.'
+  remediation: Send the X-API-KEY header. API keys minted through /refreshApiKey expire after one hour;
+    App keys do not expire.
+- status: 403
+  title: Forbidden
+  operations: 47
+  detail: Authenticated but not entitled. A free Optilogic account has test API access only; upload/download
+    and solve require a paid account.
+  remediation: Upgrade the account at https://optilogic.app/#/user-account?tab=pricing.
+- status: 404
+  title: Not Found
+  operations: 59
+  detail: Named workspace, job key, storage device, file, column or secret does not exist.
+  remediation: Enumerate with the corresponding list operation first.
+- status: 412
+  title: Precondition Failed
+  operations: 2
+  detail: Returned by the custom-column surface when the target table state does not satisfy the operation
+    precondition.
+  remediation: Run the custom-columns validate operation and then repair before retrying.
+error_detail_types:
+  source: '#/definitions/CustomColumnsResponseError'
+  values:
+  - UnspecifiedError
+  - TableWithNoColumns
+  - MissingTable
+  - MissingColumn
+  - ExtraColumn
+  - TypeMismatch
+  - MissingMetadata
+  - MetadataDiscrepancy
+  - IsNullableMismatch
+  - UpdateTypedView
+  - MissingTypedView
+  - DefaultValueMismatch
+  - MaxLengthMismatch
+  note: Verbatim from the example string on the CustomColumnsResponseError.errorDetails[].type property
+    in the published Swagger document.
+gaps:
+- No rate-limit (429) response is documented on any of the 67 operations.
+- No response examples are present anywhere in the Swagger document.
+- No operationId is set on any operation, so error handling cannot be keyed to a stable operation identifier.
