@@ -20,19 +20,37 @@ tags:
 - Jobs
 - Cloud
 apis:
-- name: Optilogic REST API
-  description: 'The Optilogic REST API exposes the Optilogic cloud platform to code: authenticate and refresh an API key, enumerate and inspect workspaces, queue and monitor Andromeda jobs (single, batch, back-to-back and search-and-run), read job ledgers and metrics, upload/download/copy/share files in the workspace /projects directory, manage SQL storage devices including connection strings, schema, tables, custom columns, custom tables, tags and labels, run database data exports, and store account secrets. Published as a Swagger 2.0 document with 67 operations and 99 definitions.'
+- name: Optilogic MCP Server (Ada Connector)
+  description: >-
+    Optilogic operates a hosted, remote Model Context Protocol server that backs the Ada connector for
+    Claude. An MCP client points at https://mcp.optilogic.app/mcp and authenticates over OAuth 2.1 against
+    the Optilogic Keycloak realm; once connected, the agent can name Cosmic Frog models, DataStar projects
+    or other Postgres databases, and Ada attaches them and answers against them. The endpoint answers
+    anonymously with HTTP 401 and an RFC 9728 WWW-Authenticate resource_metadata challenge, so the live
+    tool list requires an authenticated session.
+  humanURL: >-
+    https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
+  baseURL: https://mcp.optilogic.app/mcp
+  tags:
+  - MCP
+  - Agents
+  - Artificial Intelligence
+  properties:
+  - type: MCPServer
+    url: mcp/optilogic-mcp.yml
+  - type: Documentation
+    url: >-
+      https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
+- aid: optilogic:optilogic-authentication-api
+  name: Optilogic Authentication API
+  description: Get authentication keys and client credentials
   humanURL: https://api-docs.optilogic.app/documentation
   baseURL: https://api.optilogic.app/v0
   tags:
-  - Jobs
-  - Workspaces
-  - Storage
-  - Files
-  - Supply Chain
+  - authentication
   properties:
   - type: OpenAPI
-    url: openapi/optilogic-rest-api-openapi.json
+    url: openapi/optilogic-authentication-api-openapi.yml
   - type: Documentation
     url: https://api-docs.optilogic.app/documentation
   - type: APIReference
@@ -45,21 +63,226 @@ apis:
     url: data-model/optilogic-data-model.yml
   - type: Conventions
     url: conventions/optilogic-conventions.yml
-  - type: Overlay
-    url: overlays/optilogic-rest-api-overlay.yaml
-- name: Optilogic MCP Server (Ada Connector)
-  description: Optilogic operates a hosted, remote Model Context Protocol server that backs the Ada connector for Claude. An MCP client points at https://mcp.optilogic.app/mcp and authenticates over OAuth 2.1 against the Optilogic Keycloak realm; once connected, the agent can name Cosmic Frog models, DataStar projects or other Postgres databases, and Ada attaches them and answers against them. The endpoint answers anonymously with HTTP 401 and an RFC 9728 WWW-Authenticate resource_metadata challenge, so the live tool list requires an authenticated session.
-  humanURL: https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
-  baseURL: https://mcp.optilogic.app/mcp
+- aid: optilogic:optilogic-job-api
+  name: Optilogic Job API
+  description: Get information about Andromeda jobs
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
   tags:
-  - MCP
-  - Agents
-  - Artificial Intelligence
+  - job
   properties:
-  - type: MCPServer
-    url: mcp/optilogic-mcp.yml
+  - type: OpenAPI
+    url: openapi/optilogic-job-api-openapi.yml
   - type: Documentation
-    url: https://optilogic.com/resources/help-center/docs/getting-started-with-the-ada-claude-connector
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-api
+  name: Optilogic Storage API
+  description: Get storage information
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - storage
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-custom-columns-api
+  name: 'Optilogic storage : custom columns API'
+  description: Manage database custom columns
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - 'storage : custom columns'
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-custom-columns-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-custom-tables-api
+  name: 'Optilogic storage : custom tables API'
+  description: Manage database custom tables
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - 'storage : custom tables'
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-custom-tables-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-labels-api
+  name: 'Optilogic storage : labels API'
+  description: Manage custom key/value attributes on a storage record
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - 'storage : labels'
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-labels-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-sharing-api
+  name: 'Optilogic storage : sharing API'
+  description: Share, send, and clone databases
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - 'storage : sharing'
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-sharing-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-tags-api
+  name: 'Optilogic storage : tags API'
+  description: Manage custom tags on a storage record
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - 'storage : tags'
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-tags-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-storage-templates-api
+  name: 'Optilogic storage : templates API'
+  description: Get database template information
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - 'storage : templates'
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-storage-templates-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-utility-api
+  name: Optilogic Utility API
+  description: A library of tools that solve specific problems
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - utility
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-utility-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
+- aid: optilogic:optilogic-workspace-api
+  name: Optilogic Workspace API
+  description: Get information about a workspace, including job and file information
+  humanURL: https://api-docs.optilogic.app/documentation
+  baseURL: https://api.optilogic.app/v0
+  tags:
+  - workspace
+  properties:
+  - type: OpenAPI
+    url: openapi/optilogic-workspace-api-openapi.yml
+  - type: Documentation
+    url: https://api-docs.optilogic.app/documentation
+  - type: APIReference
+    url: https://api-docs.optilogic.app/documentation
+  - type: Authentication
+    url: authentication/optilogic-authentication.yml
+  - type: ErrorCatalog
+    url: errors/optilogic-problem-types.yml
+  - type: DataModel
+    url: data-model/optilogic-data-model.yml
+  - type: Conventions
+    url: conventions/optilogic-conventions.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
