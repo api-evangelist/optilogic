@@ -1,6 +1,18 @@
 aid: optilogic
 name: Optilogic
 description: Optilogic is a cloud-native supply chain design company headquartered in Ann Arbor, Michigan, whose Cosmic Frog platform lets teams model, optimize, simulate and risk-score supply chain networks in one environment, alongside DataStar for AI-assisted data preparation, Ada agentic AI, the Lumina Tariff Optimizer and the Atlas Python coding workspace. Its developer surface is the Optilogic REST API (Swagger 2.0, 67 operations across authentication, workspace, job, storage and utility) served from api.optilogic.app/v0 with X-API-KEY authentication, an OptiPy Python client and an OptiJS browser client, plus an OAuth-protected remote MCP server at mcp.optilogic.app/mcp that powers the Ada connector for Claude.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cdn.prod.website-files.com/682c88de65bdb86ec53f8277/687fd1599d7415ecd00e4908_Optilogic_logo_2025.svg
 url: https://raw.githubusercontent.com/api-evangelist/optilogic/refs/heads/main/apis.yml
 x-type: company
