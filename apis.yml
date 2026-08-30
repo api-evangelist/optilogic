@@ -29,6 +29,17 @@ tags:
 - Logistics
 - Analytics
 - Artificial Intelligence
+- Job
+- Cloud
+tags_raw:
+- Supply Chain
+- Supply Chain Design
+- Network Optimization
+- Simulation
+- Optimization
+- Logistics
+- Analytics
+- Artificial Intelligence
 - Jobs
 - Cloud
 apis:
@@ -59,6 +70,8 @@ apis:
   humanURL: https://api-docs.optilogic.app/documentation
   baseURL: https://api.optilogic.app/v0
   tags:
+  - Authentication
+  tags_raw:
   - authentication
   properties:
   - type: OpenAPI
@@ -81,6 +94,8 @@ apis:
   humanURL: https://api-docs.optilogic.app/documentation
   baseURL: https://api.optilogic.app/v0
   tags:
+  - Job
+  tags_raw:
   - job
   properties:
   - type: OpenAPI
@@ -103,6 +118,8 @@ apis:
   humanURL: https://api-docs.optilogic.app/documentation
   baseURL: https://api.optilogic.app/v0
   tags:
+  - Storage
+  tags_raw:
   - storage
   properties:
   - type: OpenAPI
@@ -257,6 +274,8 @@ apis:
   humanURL: https://api-docs.optilogic.app/documentation
   baseURL: https://api.optilogic.app/v0
   tags:
+  - Utility
+  tags_raw:
   - utility
   properties:
   - type: OpenAPI
@@ -279,6 +298,8 @@ apis:
   humanURL: https://api-docs.optilogic.app/documentation
   baseURL: https://api.optilogic.app/v0
   tags:
+  - Workspace
+  tags_raw:
   - workspace
   properties:
   - type: OpenAPI
