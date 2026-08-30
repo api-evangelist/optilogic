@@ -1,0 +1,259 @@
+openapi: 3.2.0
+info:
+  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  version: 1.0.0
+  title: Optilogic REST Job API
+  contact:
+    name: Optilogic Support
+    email: support@optilogic.com
+servers:
+- url: https://api.optilogic.app/v0
+tags:
+- name: job
+  description: Get information about Andromeda jobs
+paths:
+  /job/db-data-export/list:
+    get:
+      tags:
+      - job
+      summary: List DB Data Export jobs
+      description: ''
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DbDataExportJobList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /job/db-data-export/{jobKey}:
+    get:
+      tags:
+      - job
+      summary: Get job information for a DB Data Export job
+      description: ''
+      parameters:
+      - name: jobKey
+        in: path
+        description: Key of target job
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DbDataExportJob'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    DbDataExportJob:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        submittedDatetime:
+          type: string
+          format: date-time
+        startDatetime:
+          type: string
+          format: date-time
+        endDatetime:
+          type: string
+          format: date-time
+        runTime:
+          type: string
+          format: timespan
+        status:
+          type: string
+          format: string
+        phase:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/DbDataExportJobDetailsInfo'
+    DbDataExportJobDetailsInfo:
+      type: object
+      properties:
+        storageId:
+          type: string
+          format: string
+        storageRequest:
+          type: string
+          format: string
+        sourceSchema:
+          type: string
+          format: string
+        sourceGroup:
+          type: string
+          format: string
+        sourceQuery:
+          type: string
+          format: string
+        format:
+          type: string
+          format: string
+        fileIDs:
+          type: array
+          items:
+            type: string
+        downloadURLs:
+          type: array
+          items:
+            type: string
+        resourceConfig:
+          $ref: '#/components/schemas/JobDetailsResourceConfig'
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    JobDetailsResourceConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          format: string
+        cpu:
+          type: string
+          format: string
+        ram:
+          type: string
+          format: string
+        run_rate:
+          type: integer
+          format: int64
+    DbDataExportJobList:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        statusCounts:
+          $ref: '#/components/schemas/JobStatusCounts'
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DbDataExportJob'
+    JobStatusCounts:
+      type: object
+      properties:
+        submitted:
+          type: integer
+          format: int64
+        starting:
+          type: integer
+          format: int64
+        started:
+          type: integer
+          format: int64
+        running:
+          type: integer
+          format: int64
+        done:
+          type: integer
+          format: int64
+        stopping:
+          type: integer
+          format: int64
+        stopped:
+          type: integer
+          format: int64
+        canceling:
+          type: integer
+          format: int64
+        cancelled:
+          type: integer
+          format: int64
+        error:
+          type: integer
+          format: int64
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+externalDocs:
+  description: Find out more about Optilogic
+  url: https://optilogic.com

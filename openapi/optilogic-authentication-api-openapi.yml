@@ -1,0 +1,96 @@
+openapi: 3.2.0
+info:
+  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  version: 1.0.0
+  title: Optilogic REST Authentication API
+  contact:
+    name: Optilogic Support
+    email: support@optilogic.com
+servers:
+- url: https://api.optilogic.app/v0
+tags:
+- name: authentication
+  description: Get authentication keys and client credentials
+paths:
+  /refreshApiKey:
+    post:
+      tags:
+      - authentication
+      summary: Create a new API key
+      description: Creates and returns a new API key. The users `username` and `password`, or a 'refresh key' must be passed in using headers. This api key will only be visible once at the time of creation.<br /><br />This API key will need to be refreshed at least every 1 hour to remain authenticated
+      parameters:
+      - in: header
+        name: X-USER-ID
+        description: User id
+        required: false
+        schema:
+          type: string
+      - in: header
+        name: X-USER-PASSWORD
+        description: User password
+        required: false
+        schema:
+          type: string
+          format: password
+      - in: header
+        name: X-REFRESH-KEY
+        description: Refresh key previously obtained with this same endpoint
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshedApiKey'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    RefreshedApiKey:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        apiKey:
+          type: string
+          format: string
+          description: The new api key for this user.
+        refreshKey:
+          type: string
+          format: string
+          description: The refresh key for this api key.
+        expirationTime:
+          type: integer
+          format: int64
+        expiresIn:
+          type: integer
+          format: int64
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+externalDocs:
+  description: Find out more about Optilogic
+  url: https://optilogic.com

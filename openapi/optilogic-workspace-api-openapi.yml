@@ -1,0 +1,2282 @@
+openapi: 3.2.0
+info:
+  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  version: 1.0.0
+  title: Optilogic REST Workspace API
+  contact:
+    name: Optilogic Support
+    email: support@optilogic.com
+servers:
+- url: https://api.optilogic.app/v0
+tags:
+- name: workspace
+  description: Get information about a workspace, including job and file information
+paths:
+  /workspaces:
+    get:
+      tags:
+      - workspace
+      summary: Get a list of available workspaces in an account
+      description: ''
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}:
+    get:
+      tags:
+      - workspace
+      summary: Get information about a workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace name to get information
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/jobs:
+    get:
+      tags:
+      - workspace
+      summary: List the jobs for a specific workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace to list jobs from
+        required: true
+        schema:
+          type: string
+      - name: command
+        in: query
+        description: Filter by command property
+        required: false
+        schema:
+          type: string
+      - name: history
+        in: query
+        description: Filter by submitted property. Number of days or 'All'. Default is 7.
+        required: false
+        schema:
+          type: string
+      - name: runSecsMax
+        in: query
+        description: Filter by runTime property. Maximum seconds (list only where runTime is less than)
+        required: false
+        schema:
+          type: integer
+      - name: runSecsMin
+        in: query
+        description: Filter by runTime property. Minimum seconds (list only where runTime is greater than)
+        required: false
+        schema:
+          type: integer
+      - name: status
+        in: query
+        description: Filter by status property
+        required: false
+        schema:
+          type: string
+          enum:
+          - submitted
+          - starting
+          - started
+          - running
+          - canceling
+          - done
+          - stopping
+          - stopped
+          - cancelled
+          - error
+      - name: tags
+        in: query
+        description: Filter by tags property
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/jobs/stats:
+    get:
+      tags:
+      - workspace
+      summary: Get the stats only for jobs for a specific workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace to list jobs from
+        required: true
+        schema:
+          type: string
+      - name: command
+        in: query
+        description: Filter by command property
+        required: false
+        schema:
+          type: string
+      - name: history
+        in: query
+        description: Filter by submitted property. Number of days or 'All'. Default is 7.
+        required: false
+        schema:
+          type: string
+      - name: runSecsMax
+        in: query
+        description: Filter by runTime property. Maximum seconds (list only where runTime is less than)
+        required: false
+        schema:
+          type: integer
+      - name: runSecsMin
+        in: query
+        description: Filter by runTime property. Minimum seconds (list only where runTime is greater than)
+        required: false
+        schema:
+          type: integer
+      - name: status
+        in: query
+        description: Filter by status property
+        required: false
+        schema:
+          type: enum
+          enum:
+          - submitted"
+          - starting
+          - started
+          - running
+          - canceling
+          - done
+          - stopping
+          - stopped
+          - cancelled
+          - error
+      - name: tags
+        in: query
+        description: Filter by tags property
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobListStats'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/job:
+    post:
+      tags:
+      - workspace
+      summary: Queue a job
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace to run a job from
+        required: true
+        schema:
+          type: string
+      - name: directoryPath
+        in: query
+        description: Path to folder/directory (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: filename
+        in: query
+        description: Name of the file to run
+        required: true
+        schema:
+          type: string
+      - name: command
+        in: query
+        description: Modify job behavior to use one of Optilogic's Applied Research tools
+        required: false
+        schema:
+          type: string
+          enum:
+          - run
+          - presolve
+          - run_model
+          default: run
+      - name: commandArgs
+        in: query
+        description: 'Additional arguments for the selected command
+
+
+          *Note*: This string is included as provided. Directory and file paths (if any) are **not** inherently relative to */projects* as discussed in [Accessing your Files](#accessing-your-files)
+
+
+          *Example*: "/tmp/some_file.txt --verbose"
+
+          '
+        required: false
+        schema:
+          type: string
+      - name: resourceConfig
+        in: query
+        description: Resource configuration (cpu and ram) used to run a job
+        required: false
+        schema:
+          type: string
+          enum:
+          - mini
+          - 4XS
+          - 3XS
+          - 2XS
+          - XS
+          - S
+          - M
+          - L
+          - XL
+          - 2XL
+          - 3XL
+          - 4XL
+          default: 3XS
+      - name: tags
+        in: query
+        description: Comma-separated list of tags for the job.
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: Maximum job runtime in seconds. The job will be canceled if it runs past this value.
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobPost'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/job/{jobKey}:
+    get:
+      tags:
+      - workspace
+      summary: Get job information
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace where the job is running
+        required: true
+        schema:
+          type: string
+      - name: jobKey
+        in: path
+        description: Key of target job
+        required: true
+        schema:
+          type: string
+      - name: op
+        in: query
+        description: Operation - 'status' gets the job status, 'log' downloads a zip file with job info, results, and errors, 'result' downloads the job's result file, 'error' downloads the job's error file
+        required: false
+        schema:
+          type: string
+          enum:
+          - status
+          - log
+          - result
+          - error
+          default: status
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+    delete:
+      tags:
+      - workspace
+      summary: Stop a queued or running job
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace where the job is running
+        required: true
+        schema:
+          type: string
+      - name: jobKey
+        in: path
+        description: Key of target job
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDelete'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/jobBatch/jobify:
+    post:
+      tags:
+      - workspace
+      summary: Queue a list of jobs
+      description: Allows you to queue jobs from a list of python modules.
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace that contains your python modules.
+        required: true
+        schema:
+          type: string
+      - name: resourceConfig
+        in: query
+        description: Resource configuration (cpu and ram) used for any jobs that will be queued.
+        required: false
+        schema:
+          type: string
+          enum:
+          - mini
+          - 4XS
+          - 3XS
+          - 2XS
+          - XS
+          - S
+          - M
+          - L
+          - XL
+          - 2XL
+          - 3XL
+          - 4XL
+          default: 3XS
+      - name: tags
+        in: query
+        description: Comma-separated list of tags for the jobs that will queued.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobifyPost'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchItems:
+                  type: array
+                  example:
+                  - pyModulePath: /projects/My Files/Advanced Model Template/Advanced Model Template_gurobi.py
+                  - pyModulePath: /projects/Model Library/MIP Optimization/cutting_sheet_metal/cutting_sheet_metal.py
+                    commandArgs: arg1 arg2
+                    timeout: 300
+                  items:
+                    type: object
+                    properties:
+                      pyModulePath:
+                        description: The path to the python module that will be run.
+                        type: string
+                        required: true
+                      commandArgs:
+                        description: Arguments to send to the python module.
+                        type: string
+                        required: false
+                      timeout:
+                        description: Maximum job runtime in seconds. The job will be canceled if it runs past this value.
+                        type: integer
+                        required: false
+        description: Sequential list of python modules to be queued
+        required: true
+  /{workspace}/jobBatch/jobify/searchNRun:
+    post:
+      tags:
+      - workspace
+      summary: Queue a list of jobs from a list of search terms
+      description: Allows you to send a list of search terms and queue all matching python modules as jobs.
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace that contains your python modules.
+        required: true
+        schema:
+          type: string
+      - name: resourceConfig
+        in: query
+        description: Resource configuration (cpu and ram) used for any jobs that will be queued.
+        required: false
+        schema:
+          type: string
+          enum:
+          - mini
+          - 4XS
+          - 3XS
+          - 2XS
+          - XS
+          - S
+          - M
+          - L
+          - XL
+          - 2XL
+          - 3XL
+          - 4XL
+          default: 3XS
+      - name: tags
+        in: query
+        description: Comma-separated list of tags for the jobs that will queued.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobifyPost'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchItems:
+                  type: array
+                  example:
+                  - pySearchTerm: Transportation
+                    commandArgs: -hours 48
+                  - pySearchTerm: MIP Optimization/flow_shop_scheduling
+                    timeout: 300
+                  items:
+                    type: object
+                    properties:
+                      pySearchTerm:
+                        description: Search term that allows us to find the right python modules.
+                        type: string
+                        required: true
+                      commandArgs:
+                        description: Arguments to send to the matching python modules.
+                        type: string
+                        required: false
+                      timeout:
+                        description: Maximum job runtime in seconds. All matches will be canceled if they run past this value.
+                        type: integer
+                        required: false
+        description: Sequential list of search items. Matches will be queued as new jobs.
+        required: true
+  /{workspace}/jobBatch/backToBack:
+    post:
+      tags:
+      - workspace
+      summary: Run a list of python modules
+      description: Run a list of python modules, as a single job, back to back, one after another.
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace that contains your python modules.
+        required: true
+        schema:
+          type: string
+      - name: resourceConfig
+        in: query
+        description: Resource configuration (cpu and ram) used to run this job.
+        required: false
+        schema:
+          type: string
+          enum:
+          - mini
+          - 4XS
+          - 3XS
+          - 2XS
+          - XS
+          - S
+          - M
+          - L
+          - XL
+          - 2XL
+          - 3XL
+          - 4XL
+          default: 3XS
+      - name: tags
+        in: query
+        description: Comma-separated list of tags for this job.
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: Maximum job runtime in seconds. The job will be canceled if it runs past this value.
+        required: false
+        schema:
+          type: integer
+      - name: verboseOutput
+        in: query
+        description: When enabled, adds descriptive information to the output.
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchPost'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchItems:
+                  type: array
+                  example:
+                  - pyModulePath: /projects/My Files/Advanced Model Template/Advanced Model Template_gurobi.py
+                  - pyModulePath: /projects/Model Library/MIP Optimization/cutting_sheet_metal/cutting_sheet_metal.py
+                    commandArgs: arg1 arg2
+                    timeout: 300
+                  items:
+                    type: object
+                    properties:
+                      pyModulePath:
+                        description: The python module to run. The full path is required.
+                        type: string
+                        required: true
+                      commandArgs:
+                        description: Arguments to send to the python module.
+                        type: string
+                        required: false
+                      timeout:
+                        description: Maximum job runtime in seconds for this python module.
+                        type: integer
+                        required: false
+        description: List of python modules. They will be run sequentially, in this order.
+        required: true
+  /{workspace}/jobBatch/backToBack/searchNRun:
+    post:
+      tags:
+      - workspace
+      summary: Run a list of matching python modules.
+      description: Allows you to send a list, of search terms, and run all matching python modules, back to back in one job.
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace that contains your python modules.
+        required: true
+        schema:
+          type: string
+      - name: resourceConfig
+        in: query
+        description: Resource configuration (cpu and ram) used for this job.
+        required: false
+        schema:
+          type: string
+          enum:
+          - mini
+          - 4XS
+          - 3XS
+          - 2XS
+          - XS
+          - S
+          - M
+          - L
+          - XL
+          - 2XL
+          - 3XL
+          - 4XL
+          default: 3XS
+      - name: tags
+        in: query
+        description: Comma-separated list of tags for this job.
+        required: false
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: Maximum job runtime in seconds. The job will be canceled if it runs past this value.
+        required: false
+        schema:
+          type: integer
+      - name: verboseOutput
+        in: query
+        description: When enabled, adds descriptive information to the output.
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchPost'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                batchItems:
+                  type: array
+                  example:
+                  - pySearchTerm: Transportation
+                    commandArgs: -hours 48
+                  - pySearchTerm: MIP Optimization/flow_shop_scheduling
+                    timeout: 300
+                  items:
+                    type: object
+                    properties:
+                      pySearchTerm:
+                        description: Search term that allows us to find the right python modules.
+                        type: string
+                        required: true
+                      commandArgs:
+                        description: Arguments to send to the matching python modules.
+                        type: string
+                        required: false
+                      timeout:
+                        description: Maximum runtime in seconds. A match will be canceled if it runs past this value.
+                        type: integer
+                        required: false
+        description: Sequential list of search items. All matching python modules will be run before we look at the next search item.
+        required: true
+  /{workspace}/files:
+    get:
+      tags:
+      - workspace
+      summary: List all user files in the workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace to list files from
+        required: true
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Search term to filter results
+        required: false
+        schema:
+          type: string
+      - name: maxDepth
+        in: query
+        description: Limit how many directories deep the search will iterate
+        required: false
+        schema:
+          type: integer
+      - name: baseDir
+        in: query
+        description: Optional starting directory to list files from
+        required: false
+        schema:
+          type: string
+      - name: includeDir
+        in: query
+        description: If true the response will include an array of all directory paths encountered
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/job/{jobKey}/ledger:
+    get:
+      tags:
+      - workspace
+      summary: Get records from the specified job's ledger
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace where the job was ran
+        required: true
+        schema:
+          type: string
+      - name: jobKey
+        in: path
+        description: Key of target job
+        required: true
+        schema:
+          type: string
+      - name: keys
+        in: query
+        description: Comma-separated string - Limits records to those whose key appears in the list. No value will return all records
+        required: false
+        schema:
+          type: string
+          default: ''
+      - name: limit
+        in: query
+        description: Limit how many records will be returned
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobLedger'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/job/{jobKey}/metrics:
+    get:
+      tags:
+      - workspace
+      summary: Get metrics gathered while the job was running
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace where the job was ran
+        required: true
+        schema:
+          type: string
+      - name: jobKey
+        in: path
+        description: Key of target job
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobMetrics'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/job/{jobKey}/metrics/stats:
+    get:
+      tags:
+      - workspace
+      summary: Get a roll-up of metric statistics gathered while the job was running
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Name of the workspace where the job was ran
+        required: true
+        schema:
+          type: string
+      - name: jobKey
+        in: path
+        description: Key of target job
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobMetricsStats'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/file/copy:
+    post:
+      tags:
+      - workspace
+      summary: Copy a file within a workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace in which the file will be copied
+        required: true
+        schema:
+          type: string
+      - name: sourceDirectoryPath
+        in: query
+        description: Path to the source file (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: sourceFilename
+        in: query
+        description: Name of the source file in the workspace
+        required: true
+        schema:
+          type: string
+      - name: targetDirectoryPath
+        in: query
+        description: Desired path of the new file in the workspace (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: targetFilename
+        in: query
+        description: Desired name of the new file in the workspace
+        required: true
+        schema:
+          type: string
+      - name: overwrite
+        in: query
+        description: Overwrite existing file if there is one
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CopyFile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileCopy'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileCopy'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileCopy'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '412':
+          description: File Already Exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileCopy'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/file/share:
+    post:
+      tags:
+      - workspace
+      summary: Share a file with other users
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace from which to share
+        required: true
+        schema:
+          type: string
+      - name: sourceDirectoryPath
+        in: query
+        description: Path to the source file (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: sourceFilename
+        in: query
+        description: Name of the source file in the workspace
+        required: true
+        schema:
+          type: string
+      - name: targetUsers
+        in: query
+        description: Comma-delimited list of users to share to (usernames or emails)
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileShare'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileShare'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileShare'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFileShare'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/file/{directoryPath}/{filename}:
+    get:
+      tags:
+      - workspace
+      summary: Get a file from a specific workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace where the file exists
+        required: true
+        schema:
+          type: string
+      - name: directoryPath
+        in: path
+        description: Path to the file (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: filename
+        in: path
+        description: Name of the file
+        required: true
+        schema:
+          type: string
+      - name: op
+        in: query
+        description: Operation - 'download' downloads the file, 'status' gets the file info and status
+        required: false
+        schema:
+          type: string
+          enum:
+          - status
+          - download
+          default: status
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+    post:
+      tags:
+      - workspace
+      summary: Upload a file to a workspace
+      description: ''
+      parameters:
+      - name: content-type
+        in: header
+        description: Only 'application/octet-stream' is supported
+        required: true
+        schema:
+          type: string
+      - name: content-length
+        in: header
+        description: Size of the file being uploaded
+        required: true
+        schema:
+          type: string
+      - name: workspace
+        in: path
+        description: Workspace where the file will be uploaded
+        required: true
+        schema:
+          type: string
+      - name: directoryPath
+        in: path
+        description: Path to the file destination (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: filename
+        in: path
+        description: Desired name of the file in the workspace
+        required: true
+        schema:
+          type: string
+      - name: overwrite
+        in: query
+        description: Overwrite existing file if there is one
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '412':
+          description: File already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+    delete:
+      tags:
+      - workspace
+      summary: Delete a specific file from a workspace
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace where the file exists
+        required: true
+        schema:
+          type: string
+      - name: directoryPath
+        in: path
+        description: Path to the file (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: filename
+        in: path
+        description: Name of the file
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileDelete'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /{workspace}/folder/share:
+    post:
+      tags:
+      - workspace
+      summary: Share a folder with other users
+      description: ''
+      parameters:
+      - name: workspace
+        in: path
+        description: Workspace from which to share
+        required: true
+        schema:
+          type: string
+      - name: sourceDirectoryPath
+        in: query
+        description: Path to the source directory (see [Accessing your Files](#accessing-your-files))
+        required: true
+        schema:
+          type: string
+      - name: targetUsers
+        in: query
+        description: Comma-delimited list of users to share to (usernames or emails)
+        required: true
+        schema:
+          type: string
+      - name: includeHidden
+        in: query
+        description: Include hidden files contained in the folder
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FolderShare'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFolderShare'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFolderShare'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorFolderShare'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+      security:
+      - APIKeyHeader: []
+components:
+  schemas:
+    JobMetricsStats:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        max:
+          type: object
+          properties:
+            memoryPercent:
+              type: number
+              format: double
+            memoryResident:
+              type: number
+              format: double
+            memoryAvaliable:
+              type: number
+              format: double
+            cpuPercent:
+              type: number
+              format: double
+            cpuUsed:
+              type: number
+              format: double
+            cpuAvaliable:
+              type: number
+              format: double
+            processCount:
+              type: integer
+              format: int64
+        count:
+          type: integer
+          format: int64
+    FileList:
+      type: object
+      required:
+      - result
+      - count
+      - files
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileShortInfoPath'
+        directories:
+          type: array
+          items:
+            type: string
+    JobDetailsInfo:
+      type: object
+      properties:
+        workspace:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        filename:
+          type: string
+          format: string
+        resourceConfig:
+          $ref: '#/components/schemas/JobDetailsResourceConfig'
+        tags:
+          type: string
+          format: string
+        timeout:
+          type: integer
+          format: int64
+    JobLedger:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        records:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: integer
+                format: int64
+              datetime:
+                type: string
+                format: date-time
+              key:
+                type: string
+                format: string
+              message:
+                type: string
+                format: string
+    JobifyPost:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        jobKeys:
+          type: array
+          items:
+            type: string
+            format: uuid
+        errors:
+          type: array
+          items:
+            type: string
+    FileDelete:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        fileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+    JobDetailsResourceConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          format: string
+        cpu:
+          type: string
+          format: string
+        ram:
+          type: string
+          format: string
+        run_rate:
+          type: integer
+          format: int64
+    FolderShare:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        sourceFileInfo:
+          type: object
+          properties:
+            directoryPath:
+              type: string
+              format: string
+        targetUsers:
+          type: string
+          format: string
+        jobsCount:
+          type: integer
+          format: int64
+        jobs:
+          type: array
+          items:
+            properties:
+              jobKey:
+                type: string
+                format: uuid
+              result:
+                type: string
+                format: string
+        erroredCount:
+          type: integer
+          format: int64
+        errored:
+          type: array
+          items:
+            properties:
+              jobKey:
+                type: string
+                format: uuid
+              result:
+                type: string
+                format: string
+    FileMicroInfo:
+      type: object
+      properties:
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+    FileShortInfoPath:
+      type: object
+      properties:
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        filePath:
+          type: string
+          format: string
+        contentLength:
+          type: integer
+          format: int64
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    FileShare:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetUsers:
+          type: string
+          format: string
+        jobsCount:
+          type: integer
+          format: int64
+        jobs:
+          type: array
+          items:
+            properties:
+              jobKey:
+                type: string
+                format: uuid
+              result:
+                type: string
+                format: string
+        erroredCount:
+          type: integer
+          format: int64
+        errored:
+          type: array
+          items:
+            properties:
+              jobKey:
+                type: string
+                format: uuid
+              result:
+                type: string
+                format: string
+    JobListStats:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        statusCounts:
+          $ref: '#/components/schemas/JobStatusCounts'
+        tagCounts:
+          $ref: '#/components/schemas/JobTagCounts'
+        filters:
+          $ref: '#/components/schemas/JobListFilters'
+    ErrorFileShare:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetUsers:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    WorkspaceList:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        workspaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceInfo'
+    JobTagCounts:
+      type: object
+      properties:
+        tag:
+          type: integer
+          format: int64
+    ErrorFolderShare:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        sourceDirectoryPath:
+          type: string
+          format: string
+        targetUsers:
+          type: string
+          format: string
+        includeHidden:
+          type: boolean
+          format: boolean
+        correlationId:
+          type: string
+          format: uuid
+    JobPost:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    ErrorFileCopy:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        copyStatus:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        correlationId:
+          type: string
+          format: uuid
+    File:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        workspace:
+          type: string
+          format: string
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        filePath:
+          type: string
+          format: string
+        lastModified:
+          type: string
+          format: date-time
+        contentLength:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date-time
+        fileCreatedOn:
+          type: string
+          format: date-time
+        fileLastWriteOn:
+          type: string
+          format: date-time
+        fileChangeOn:
+          type: string
+          format: date-time
+    JobList:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        statusCounts:
+          $ref: '#/components/schemas/JobStatusCounts'
+        tagCounts:
+          $ref: '#/components/schemas/JobTagCounts'
+        filters:
+          $ref: '#/components/schemas/JobListFilters'
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobInfo'
+    JobMetrics:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        max:
+          type: object
+          properties:
+            memoryPercent:
+              type: number
+              format: double
+            memoryResident:
+              type: number
+              format: double
+            memoryAvaliable:
+              type: number
+              format: double
+            cpuPercent:
+              type: number
+              format: double
+            cpuUsed:
+              type: number
+              format: double
+            cpuAvaliable:
+              type: number
+              format: double
+            processCount:
+              type: integer
+              format: int64
+        count:
+          type: integer
+          format: int64
+        records:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: integer
+                format: int64
+              datetime:
+                type: string
+                format: date-time
+              memoryPercent:
+                type: number
+                format: double
+              memoryResident:
+                type: number
+                format: double
+              memoryAvaliable:
+                type: number
+                format: double
+              cpuPercent:
+                type: number
+                format: double
+              cpuUsed:
+                type: number
+                format: double
+              cpuAvaliable:
+                type: number
+                format: double
+              processCount:
+                type: integer
+                format: int64
+    Job:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        submittedDatetime:
+          type: string
+          format: date-time
+        startDatetime:
+          type: string
+          format: date-time
+        endDatetime:
+          type: string
+          format: date-time
+        runTime:
+          type: string
+          format: timespan
+        status:
+          type: string
+          format: string
+        phase:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    JobInfo:
+      type: object
+      properties:
+        jobKey:
+          type: string
+          format: uuid
+        submittedDatetime:
+          type: string
+          format: date-time
+        startDatetime:
+          type: string
+          format: date-time
+        endDatetime:
+          type: string
+          format: date-time
+        runTime:
+          type: string
+          format: timespan
+        status:
+          type: string
+          format: string
+        phase:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    JobDelete:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        status:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    JobListFilters:
+      type: object
+      properties:
+        command:
+          type: string
+          format: string
+        history:
+          type: string
+          format: string
+        runSecsMax:
+          type: string
+          format: string
+        runSecsMin:
+          type: string
+          format: string
+        status:
+          type: string
+          format: string
+        tags:
+          type: string
+          format: string
+    FileShortInfo:
+      type: object
+      properties:
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        contentLength:
+          type: integer
+          format: int64
+    CopyFile:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        copyStatus:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+    UploadFile:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        fileInfo:
+          $ref: '#/components/schemas/FileShortInfo'
+    Workspace:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        status:
+          type: string
+          format: string
+          description: workspace state
+        name:
+          type: string
+          format: string
+        key:
+          type: string
+          format: string
+        stack:
+          type: string
+          format: string
+    BatchPost:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        batch:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    JobStatusCounts:
+      type: object
+      properties:
+        submitted:
+          type: integer
+          format: int64
+        starting:
+          type: integer
+          format: int64
+        started:
+          type: integer
+          format: int64
+        running:
+          type: integer
+          format: int64
+        done:
+          type: integer
+          format: int64
+        stopping:
+          type: integer
+          format: int64
+        stopped:
+          type: integer
+          format: int64
+        canceling:
+          type: integer
+          format: int64
+        cancelled:
+          type: integer
+          format: int64
+        error:
+          type: integer
+          format: int64
+    WorkspaceInfo:
+      type: object
+      properties:
+        status:
+          type: string
+          format: string
+          description: workspace state
+        name:
+          type: string
+          format: string
+        key:
+          type: string
+          format: string
+        stack:
+          type: string
+          format: string
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+externalDocs:
+  description: Find out more about Optilogic
+  url: https://optilogic.com

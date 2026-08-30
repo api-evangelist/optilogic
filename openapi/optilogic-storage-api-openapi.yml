@@ -1,0 +1,977 @@
+openapi: 3.2.0
+info:
+  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  version: 1.0.0
+  title: Optilogic REST Storage API
+  contact:
+    name: Optilogic Support
+    email: support@optilogic.com
+servers:
+- url: https://api.optilogic.app/v0
+tags:
+- name: storage
+  description: Get storage information
+paths:
+  /storages/db-connection-strings:
+    get:
+      tags:
+      - storage
+      summary: Get the connection information for all SQL storage items
+      description: ''
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoragesDBConnectionStrings'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/connection-string:
+    get:
+      tags:
+      - storage
+      summary: Get the connection information for a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageSqlConnection'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/db-objects:
+    get:
+      tags:
+      - storage
+      summary: Get database objects (stats, tables, and views) for a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: Type of database object to return
+        required: false
+        schema:
+          type: string
+          enum:
+          - stats
+          - tables
+          - views
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDbObjects'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/schema:
+    get:
+      tags:
+      - storage
+      summary: Get database schema (tables and views) for a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: schema
+        in: query
+        description: Name of the database schema. (Blank or missing for all schemas)
+        required: false
+        schema:
+          type: string
+      - name: table
+        in: query
+        description: Name of the database table. (Blank or missing for all tables)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSchema'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/tables:
+    get:
+      tags:
+      - storage
+      summary: Get tables information for a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: schema
+        in: query
+        description: Database schema to return tables from
+        required: false
+        schema:
+          type: string
+          default: ''
+      - name: rowCounts
+        in: query
+        description: Return row counts or not
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStorageTables'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/empty-tables:
+    post:
+      tags:
+      - storage
+      summary: Delete all data rows from specified tables in a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: dryRun
+        in: query
+        description: When true, do not empty the tables
+        required: false
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyStorageTables'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tables:
+                  type: array
+                  example:
+                  - anura_2_5.customers
+                  - anura_2_5.optimizationcustomersummary
+                  items:
+                    type: string
+        description: Array of tables to empty
+        required: true
+  /storage/{storageName}/db-data-export:
+    post:
+      tags:
+      - storage
+      summary: Export all rows from selected tables/views, or the results of a query in a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: sourceSchema
+        in: query
+        description: The schema to export tables/views from. e.g., 'anura_2_6'. Applies to sourceList and sourceGroup, but not sourceQuery.
+        required: false
+        example: anura_2_5
+        schema:
+          type: string
+      - name: sourceGroup
+        in: query
+        description: A group of tables/views to export.
+        required: false
+        schema:
+          type: string
+          enum:
+          - all
+          - tables
+          - views
+          - nonEmptyAll
+          - nonEmptyTables
+          - nonEmptyViews
+      - name: format
+        in: query
+        description: Output format for the export. Default is 'csv' if not specified.
+        required: false
+        schema:
+          type: string
+          enum:
+          - csv
+          - xls
+          - table
+          default: csv
+      - name: destinationSchema
+        in: query
+        description: The schema to export query results to when format=table. Default if not specified is 'query_results'.
+        required: false
+        example: anura_2_8
+        schema:
+          type: string
+      - name: destinationTable
+        in: query
+        description: The table name to export query results to when format=table. Default if not specified is 'results'.
+        required: false
+        example: my_new_table
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DbDataExport'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sourceList:
+                  type: array
+                  example:
+                  - customers
+                  - facilities
+                  - products
+                  items:
+                    type: string
+                sourceQuery:
+                  type: string
+                  example: select * from anura_2_6.products where status='Include'
+                  items:
+                    type: string
+        description: An array of tables/views (sourceList) or a SQL query (sourceQuery) to export.
+        required: true
+  /storage/{storageName}/file/move:
+    put:
+      tags:
+      - storage
+      summary: Move a file within a storage device
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: source
+        in: query
+        description: Target path of the existing file
+        required: true
+        schema:
+          type: string
+      - name: dest
+        in: query
+        description: New path for the targeted file
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageMoveFile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/folder/move:
+    put:
+      tags:
+      - storage
+      summary: Move a folder within a storage device
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: source
+        in: query
+        description: Target directory to move
+        required: true
+        schema:
+          type: string
+      - name: dest
+        in: query
+        description: New location of the targeted directory
+        required: true
+        schema:
+          type: string
+      - name: mergeIfTargetExists
+        in: query
+        description: If true, merge the source directory into the target directory if it exists
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageMoveDirectory'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/folder/copy:
+    put:
+      tags:
+      - storage
+      summary: Copy a folder within a storage device or from one storage device to another
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: source
+        in: query
+        description: Target directory to copy
+        required: true
+        schema:
+          type: string
+      - name: dest
+        in: query
+        description: Path of the new directory
+        required: true
+        schema:
+          type: string
+      - name: destStorageName
+        in: query
+        description: Name of the target storage device. Defaults to same storage device as storageName if not included
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageCopyDirectory'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+components:
+  schemas:
+    StoragesDBConnectionStrings:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          example: 1
+        storages:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+                format: string
+              connectionInfo:
+                type: object
+                properties:
+                  raw:
+                    type: object
+                    properties:
+                      host:
+                        type: string
+                        format: string
+                      port:
+                        type: integer
+                        format: int64
+                        example: 6432
+                      dbname:
+                        type: string
+                        format: string
+                      user:
+                        type: string
+                        format: string
+                      password:
+                        type: string
+                        format: string
+                      sslmode:
+                        type: string
+                        format: string
+                  connectionStrings:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: string
+                        example: postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?sslmode=require
+                      psql:
+                        type: string
+                        format: string
+                        example: psql "host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require"
+                      jdbc:
+                        type: string
+                        format: string
+                        example: jdbc:postgresql://{HOST}:{PORT}/{DB_NAME}?user={USER}&password={PASSWORD}&sslmode=require
+                      libpq:
+                        type: string
+                        format: string
+                        example: host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require
+                      net:
+                        type: string
+                        format: string
+                        example: Server={HOST};Database={DB_NAME};Port={PORT};User Id={USER};Password={PASSWORD};Ssl Mode=Require;
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    GetSchema:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tables:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                          isCustom:
+                            description: whether the column is custom or not
+                            type: boolean
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+              views:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                          isCustom:
+                            description: whether the column is custom or not
+                            type: boolean
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+    GetStorageTables:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tables:
+                description: the number of tables in the schema
+                type: integer
+              is_default_schema:
+                description: whether the schema is the default schema
+                type: boolean
+                default: false
+        tables:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the table
+                type: string
+              schema:
+                description: the schema of the table
+                type: string
+              rows:
+                description: number of rows in the table
+                type: integer
+    StorageCopyDirectory:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+    StorageSqlConnection:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        raw:
+          type: object
+          properties:
+            host:
+              type: string
+              format: string
+            port:
+              type: integer
+              format: int64
+              example: 6432
+            dbname:
+              type: string
+              format: string
+            user:
+              type: string
+              format: string
+            password:
+              type: string
+              format: string
+        connectionStrings:
+          type: object
+          properties:
+            url:
+              type: string
+              format: string
+              example: postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?sslmode=require
+            psql:
+              type: string
+              format: string
+              example: psql "host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require"
+            jdbc:
+              type: string
+              format: string
+              example: jdbc:postgresql://{HOST}:{PORT}/{DB_NAME}?user={USER}&password={PASSWORD}&sslmode=require
+            libpq:
+              type: string
+              format: string
+              example: host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require
+            net:
+              type: string
+              format: string
+              example: Server={HOST};Database={DB_NAME};Port={PORT};User Id={USER};Password={PASSWORD};Ssl Mode=Require;
+    StorageMoveFile:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        fileInfo:
+          type: object
+          properties:
+            storageName:
+              type: string
+              format: string
+            directoryPath:
+              type: string
+              format: string
+            filename:
+              type: string
+              format: string
+    EmptyStorageTables:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        dryRun:
+          type: boolean
+        emptied:
+          type: array
+          items:
+            type: string
+            description: tables which were emptied
+        failed:
+          type: array
+          items:
+            type: string
+            description: tables which failed to be emptied
+    DbDataExport:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        storageId:
+          type: string
+          format: uuid
+        storageName:
+          type: string
+          format: string
+        sourceSchema:
+          type: string
+          format: string
+        sourceGroup:
+          type: string
+          format: string
+        sourceList:
+          type: array
+          items:
+            type: string
+            description: tables/views which were specified to export
+        sourceQuery:
+          type: string
+          format: string
+        format:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+    GetDbObjects:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tableCount:
+                type: number
+              viewCount:
+                type: number
+              isDefault:
+                type: boolean
+              tables:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    rows:
+                      type: number
+                    type:
+                      type: string
+                    category:
+                      type: string
+                    categoryOrder:
+                      type: string
+                    technology:
+                      type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+                    abbreviatedName:
+                      type: string
+              views:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    rows:
+                      type: number
+                    type:
+                      type: string
+                    category:
+                      type: string
+                    categoryOrder:
+                      type: string
+                    technology:
+                      type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+    StorageMoveDirectory:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        storageName:
+          type: string
+          format: string
+        dest:
+          type: string
+          format: string
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+externalDocs:
+  description: Find out more about Optilogic
+  url: https://optilogic.com

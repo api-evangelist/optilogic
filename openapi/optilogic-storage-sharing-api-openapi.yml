@@ -1,0 +1,422 @@
+openapi: 3.2.0
+info:
+  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  version: 1.0.0
+  title: 'Optilogic REST storage : sharing API'
+  contact:
+    name: Optilogic Support
+    email: support@optilogic.com
+servers:
+- url: https://api.optilogic.app/v0
+tags:
+- name: 'storage : sharing'
+  description: Share, send, and clone databases
+paths:
+  /storage/{storageName}/reassign:
+    post:
+      tags:
+      - 'storage : sharing'
+      summary: Reassigns storage ownership to a specified user
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the storage device to be reassigned
+        required: true
+        schema:
+          type: string
+      - name: targetUser
+        in: query
+        description: Username or email address of the user who will be assigned ownership of the storage device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/share:
+    post:
+      tags:
+      - 'storage : sharing'
+      summary: Sends a copy to a specified user
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the storage device to be shared
+        required: true
+        schema:
+          type: string
+      - name: targetUser
+        in: query
+        description: Username or email address of the user who will be assigned ownership of the storage device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/clone:
+    post:
+      tags:
+      - 'storage : sharing'
+      summary: Duplicates a storage
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the storage device to be duplicated
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/share/access:
+    post:
+      tags:
+      - 'storage : sharing'
+      summary: Shares storage access to a specified user
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the storage device to be shared
+        required: true
+        schema:
+          type: string
+      - name: targetUser
+        in: query
+        description: Username or email address of the user who will be assigned ownership of the storage device
+        required: true
+        schema:
+          type: string
+      - name: access
+        in: query
+        description: To govern read only access. Only 'readonly' will define read only share, anything else will give trusted access, including omitting the parameter.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+      security:
+      - APIKeyHeader: []
+    delete:
+      tags:
+      - 'storage : sharing'
+      summary: Removed shared storage access from a specified user
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the storage device to have access removed
+        required: true
+        schema:
+          type: string
+      - name: targetUser
+        in: query
+        description: Username or email address of the user who will be assigned ownership of the storage device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    format: string
+                  error:
+                    type: string
+                    format: string
+                  correlationId:
+                    type: string
+                    format: uuid
+      security:
+      - APIKeyHeader: []
+components:
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+externalDocs:
+  description: Find out more about Optilogic
+  url: https://optilogic.com

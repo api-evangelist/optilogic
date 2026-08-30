@@ -1,0 +1,907 @@
+openapi: 3.2.0
+info:
+  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  version: 1.0.0
+  title: 'Optilogic REST storage : custom columns API'
+  contact:
+    name: Optilogic Support
+    email: support@optilogic.com
+servers:
+- url: https://api.optilogic.app/v0
+tags:
+- name: 'storage : custom columns'
+  description: Manage database custom columns
+paths:
+  /storage/{storageName}/customizations:
+    get:
+      tags:
+      - 'storage : custom columns'
+      summary: Get database schema (tables and views) for a SQL storage item
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: table
+        in: query
+        description: Name of the database table. (Blank or missing for all tables)
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomizations'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storages/db-column-types:
+    get:
+      tags:
+      - 'storage : custom columns'
+      summary: Get supported column data types
+      description: Retrieve a list of all supported column data types for the database.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetColumnDataTypes'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/custom-column:
+    post:
+      tags:
+      - 'storage : custom columns'
+      summary: Create a new custom column in a database table
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: tableName
+        in: query
+        description: Name of the database table
+        required: true
+        schema:
+          type: string
+      - name: columnName
+        in: query
+        description: Name of the column to be created
+        required: true
+        schema:
+          type: string
+      - name: dataType
+        in: query
+        description: Data type of the new column (numeric,integer,text,etc.)
+        required: true
+        schema:
+          type: string
+      - name: characterMaximumLength
+        in: query
+        description: Maximum length of characters for the new column. (Only required if actual data type is character based and not 'text')
+        required: false
+        schema:
+          type: integer
+      - name: isNullable
+        in: query
+        description: Whether the new column can be NULL
+        required: false
+        schema:
+          type: boolean
+      - name: defaultValue
+        in: query
+        description: Default value for the new column
+        required: false
+        schema:
+          type: string
+      - name: isTableKeyColumn
+        in: query
+        description: Whether the column is a key column for the table
+        required: false
+        schema:
+          type: boolean
+      - name: trueDataType
+        in: query
+        description: 'The actual(physical) storage type of the table in postgres. (Valid values: bit, bool, bytea, char, cidr, date, float4, float8, inet, integer, int2, int2vector, int4, int8, interval, json, jsonb, jsonpath, line, money, numeric, point, text, time, timestamp, timestamptz, timetz, uuid, varbit, varchar, xml)'
+        required: false
+        schema:
+          type: string
+      - name: isRequired
+        in: query
+        description: Whether the column is required
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCustomColumn'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomColumnsResponseError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+    get:
+      tags:
+      - 'storage : custom columns'
+      summary: Get details of a single custom column in a database table
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: tableName
+        in: query
+        description: Name of the database table
+        required: true
+        schema:
+          type: string
+      - name: columnName
+        in: query
+        description: Name of the database column
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomColumn'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomColumnsResponseError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+    put:
+      tags:
+      - 'storage : custom columns'
+      summary: Update a custom column
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: tableName
+        in: query
+        description: Name of the database table
+        required: true
+        schema:
+          type: string
+      - name: columnName
+        in: query
+        description: Name of the column to be updated
+        required: true
+        schema:
+          type: string
+      - name: newColumnName
+        in: query
+        description: New name for the column (if being renamed)
+        required: false
+        schema:
+          type: string
+      - name: dataType
+        in: query
+        description: 'Data type of the column. (Valid values: bit, bool, bytea, char, cidr, date, float4, float8, inet, integer, int2, int2vector, int4, int8, interval, json, jsonb, jsonpath, line, money, numeric, point, text, time, timestamp, timestamptz, timetz, uuid, varbit, varchar, xml)'
+        required: false
+        schema:
+          type: string
+      - name: characterMaximumLength
+        in: query
+        description: Maximum length of characters for the column
+        required: false
+        schema:
+          type: integer
+      - name: isNullable
+        in: query
+        description: Whether the column can be NULL
+        required: false
+        schema:
+          type: boolean
+      - name: defaultValue
+        in: query
+        description: Default value for the column
+        required: false
+        schema:
+          type: string
+      - name: isTableKeyColumn
+        in: query
+        description: Whether the column is a key column for the table
+        required: false
+        schema:
+          type: boolean
+      - name: trueDataType
+        in: query
+        description: The true data type of the column
+        required: false
+        schema:
+          type: string
+      - name: isRequired
+        in: query
+        description: Whether the column is required
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCustomColumn'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomColumnsResponseError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+    delete:
+      tags:
+      - 'storage : custom columns'
+      summary: Delete a custom column
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: tableName
+        in: query
+        description: Name of the database table
+        required: true
+        schema:
+          type: string
+      - name: columnName
+        in: query
+        description: Name of the database column
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCustomColumn'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomColumnsResponseError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/custom-columns:
+    get:
+      tags:
+      - 'storage : custom columns'
+      summary: Get all custom columns for a table
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      - name: tableName
+        in: query
+        description: Name of the database table
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCustomColumns'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomColumnsResponseError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/custom-columns/validate:
+    get:
+      tags:
+      - 'storage : custom columns'
+      summary: Validate custom columns
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateCustomColumns'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+  /storage/{storageName}/custom-columns/repair:
+    post:
+      tags:
+      - 'storage : custom columns'
+      summary: Repair custom columns
+      description: ''
+      parameters:
+      - name: storageName
+        in: path
+        description: Name of the target storage device
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepairCustomColumns'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - APIKeyHeader: []
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    GetAllCustomColumns:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 3
+        customColumns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumn'
+    DeleteCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        message:
+          type: string
+    UpdateCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        id:
+          type: integer
+          example: 106
+        tableName:
+          type: string
+          example: your_table
+        columnName:
+          type: string
+          example: your_column
+        dataType:
+          type: string
+          example: integer
+        characterMaximumLength:
+          type: integer
+          example: 255
+        isNullable:
+          type: boolean
+          example: false
+        defaultValue:
+          type: string
+          example: null
+        isTableKeyColumn:
+          type: boolean
+          example: false
+        trueDataType:
+          type: string
+          example: text
+        isRequired:
+          type: boolean
+          example: true
+        message:
+          type: string
+    CustomColumn:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 106
+        tableName:
+          type: string
+          example: your_table
+        columnName:
+          type: string
+          example: your_column
+        dataType:
+          type: string
+          example: integer
+        characterMaximumLength:
+          type: integer
+          example: 255
+        isNullable:
+          type: boolean
+          example: false
+        defaultValue:
+          type: string
+          example: null
+        isTableKeyColumn:
+          type: boolean
+          example: false
+        trueDataType:
+          type: string
+          example: text
+        isRequired:
+          type: boolean
+          example: true
+    CustomColumnIssue:
+      type: object
+      properties:
+        type:
+          type: string
+          example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+          enum:
+          - UnspecifiedError
+          - TableWithNoColumns
+          - MissingTable
+          - MissingColumn
+          - ExtraColumn
+          - TypeMismatch
+          - MissingMetadata
+          - MetadataDiscrepancy
+          - IsNullableMismatch
+          - UpdateTypedView
+          - MissingTypedView
+          - DefaultValueMismatch
+          - MaxLengthMismatch
+        tableName:
+          type: string
+        columnName:
+          type: string
+        expected:
+          example: types:string, number, bool, null etc.
+        actual:
+          example: types:string, number, bool, null etc.
+        description:
+          type: string
+    ValidateCustomColumns:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 4
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumnIssue'
+    CreateCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+    GetCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        customColumn:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 106
+            tableName:
+              type: string
+              example: your_table
+            columnName:
+              type: string
+              example: your_column
+            dataType:
+              type: string
+              example: integer
+            characterMaximumLength:
+              type: integer
+              example: 255
+            isNullable:
+              type: boolean
+              example: false
+            defaultValue:
+              type: string
+              example: null
+            isTableKeyColumn:
+              type: boolean
+              example: false
+            trueDataType:
+              type: string
+              example: text
+            isRequired:
+              type: boolean
+              example: true
+    CustomColumnsResponseError:
+      type: object
+      properties:
+        result:
+          type: string
+        message:
+          type: string
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+                type: string
+              tableName:
+                type: string
+              columnName:
+                type: string
+              expected:
+                example: types:string, number, bool, null etc.
+              actual:
+                example: types:string, number, bool, null etc.
+              description:
+                type: expected value
+      required:
+      - result
+      - message
+      - errorDetails
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    GetCustomizations:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              tables:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+              views:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+    RepairCustomColumns:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        repairedCount:
+          type: integer
+          example: 3
+        errorsCount:
+          type: integer
+          example: 3
+        repaired:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumnIssue'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumnIssue'
+    GetColumnDataTypes:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 31
+        dataTypes:
+          type: array
+          items:
+            type: string
+          example:
+            result: success
+            count: 33
+            dataTypes:
+            - name: bit
+              supportsMaxLength: true
+            - name: bool
+              supportsMaxLength: false
+            - name: bytea
+              supportsMaxLength: false
+            - name: character
+              supportsMaxLength: true
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+externalDocs:
+  description: Find out more about Optilogic
+  url: https://optilogic.com
