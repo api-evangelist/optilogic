@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  description: All Optilogic users can view the endpoint documentation below, upgrade to a paid account to gain access.
   version: 1.0.0
   title: Optilogic REST Utility API
   contact:
@@ -9,13 +9,13 @@ info:
 servers:
 - url: https://api.optilogic.app/v0
 tags:
-- name: utility
+- name: Utility
   description: A library of tools that solve specific problems
 paths:
   /secrets:
     get:
       tags:
-      - utility
+      - Utility
       summary: Get a list of stored secrets
       description: ''
       parameters:
@@ -58,10 +58,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getSecrets
+      x-operation-id-source: derived
   /secret/{secretName}:
     get:
       tags:
-      - utility
+      - Utility
       summary: Get a stored secret by name
       description: ''
       parameters:
@@ -104,9 +106,11 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getSecretBySecretName
+      x-operation-id-source: derived
     post:
       tags:
-      - utility
+      - Utility
       summary: Add a new secret
       description: ''
       parameters:
@@ -174,9 +178,11 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: postSecretBySecretName
+      x-operation-id-source: derived
     put:
       tags:
-      - utility
+      - Utility
       summary: Change one or more fields on a stored secret
       description: One of 'name', 'type', 'value', 'meta', or 'description' must be provided and only fields provided will be updated
       parameters:
@@ -249,9 +255,11 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: putSecretBySecretName
+      x-operation-id-source: derived
     delete:
       tags:
-      - utility
+      - Utility
       summary: Delete a secret
       description: ''
       parameters:
@@ -294,6 +302,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: deleteSecretBySecretName
+      x-operation-id-source: derived
 components:
   schemas:
     Error:
@@ -308,7 +318,22 @@ components:
         correlationId:
           type: string
           format: uuid
-    Secret:
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    SecretDelete:
       type: object
       properties:
         result:
@@ -316,16 +341,6 @@ components:
         id:
           type: string
         name:
-          type: string
-        value:
-          type: string
-        meta:
-          type: string
-        description:
-          type: string
-        type:
-          type: string
-        created:
           type: string
     SecretsList:
       type: object
@@ -351,22 +366,7 @@ components:
                 type: string
               created:
                 type: string
-    Forbidden:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    SecretDelete:
+    Secret:
       type: object
       properties:
         result:
@@ -374,6 +374,16 @@ components:
         id:
           type: string
         name:
+          type: string
+        value:
+          type: string
+        meta:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        created:
           type: string
   securitySchemes:
     APIKeyHeader:

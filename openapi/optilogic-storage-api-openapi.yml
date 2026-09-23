@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  description: All Optilogic users can view the endpoint documentation below, upgrade to a paid account to gain access.
   version: 1.0.0
   title: Optilogic REST Storage API
   contact:
@@ -9,13 +9,13 @@ info:
 servers:
 - url: https://api.optilogic.app/v0
 tags:
-- name: storage
+- name: Storage
   description: Get storage information
 paths:
   /storages/db-connection-strings:
     get:
       tags:
-      - storage
+      - Storage
       summary: Get the connection information for all SQL storage items
       description: ''
       responses:
@@ -45,10 +45,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStoragesDbConnectionStrings
+      x-operation-id-source: derived
   /storage/{storageName}/connection-string:
     get:
       tags:
-      - storage
+      - Storage
       summary: Get the connection information for a SQL storage item
       description: ''
       parameters:
@@ -85,10 +87,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameConnectionString
+      x-operation-id-source: derived
   /storage/{storageName}/db-objects:
     get:
       tags:
-      - storage
+      - Storage
       summary: Get database objects (stats, tables, and views) for a SQL storage item
       description: ''
       parameters:
@@ -135,10 +139,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameDbObjects
+      x-operation-id-source: derived
   /storage/{storageName}/schema:
     get:
       tags:
-      - storage
+      - Storage
       summary: Get database schema (tables and views) for a SQL storage item
       description: ''
       parameters:
@@ -187,10 +193,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameSchema
+      x-operation-id-source: derived
   /storage/{storageName}/tables:
     get:
       tags:
-      - storage
+      - Storage
       summary: Get tables information for a SQL storage item
       description: ''
       parameters:
@@ -244,10 +252,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameTables
+      x-operation-id-source: derived
   /storage/{storageName}/empty-tables:
     post:
       tags:
-      - storage
+      - Storage
       summary: Delete all data rows from specified tables in a SQL storage item
       description: ''
       parameters:
@@ -309,11 +319,13 @@ paths:
                     type: string
         description: Array of tables to empty
         required: true
+      operationId: postStorageByStorageNameEmptyTables
+      x-operation-id-source: derived
   /storage/{storageName}/db-data-export:
     post:
       tags:
-      - storage
-      summary: Export all rows from selected tables/views, or the results of a query in a SQL storage item
+      - Storage
+      summary: Export all rows from selected tables/views, or the results of a query in a SQL…
       description: ''
       parameters:
       - name: storageName
@@ -415,10 +427,12 @@ paths:
                     type: string
         description: An array of tables/views (sourceList) or a SQL query (sourceQuery) to export.
         required: true
+      operationId: postStorageByStorageNameDbDataExport
+      x-operation-id-source: derived
   /storage/{storageName}/file/move:
     put:
       tags:
-      - storage
+      - Storage
       summary: Move a file within a storage device
       description: ''
       parameters:
@@ -467,10 +481,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: putStorageByStorageNameFileMove
+      x-operation-id-source: derived
   /storage/{storageName}/folder/move:
     put:
       tags:
-      - storage
+      - Storage
       summary: Move a folder within a storage device
       description: ''
       parameters:
@@ -526,10 +542,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: putStorageByStorageNameFolderMove
+      x-operation-id-source: derived
   /storage/{storageName}/folder/copy:
     put:
       tags:
-      - storage
+      - Storage
       summary: Copy a folder within a storage device or from one storage device to another
       description: ''
       parameters:
@@ -584,189 +602,10 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: putStorageByStorageNameFolderCopy
+      x-operation-id-source: derived
 components:
   schemas:
-    StoragesDBConnectionStrings:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        count:
-          type: integer
-          example: 1
-        storages:
-          type: array
-          items:
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-                format: string
-              connectionInfo:
-                type: object
-                properties:
-                  raw:
-                    type: object
-                    properties:
-                      host:
-                        type: string
-                        format: string
-                      port:
-                        type: integer
-                        format: int64
-                        example: 6432
-                      dbname:
-                        type: string
-                        format: string
-                      user:
-                        type: string
-                        format: string
-                      password:
-                        type: string
-                        format: string
-                      sslmode:
-                        type: string
-                        format: string
-                  connectionStrings:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: string
-                        example: postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?sslmode=require
-                      psql:
-                        type: string
-                        format: string
-                        example: psql "host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require"
-                      jdbc:
-                        type: string
-                        format: string
-                        example: jdbc:postgresql://{HOST}:{PORT}/{DB_NAME}?user={USER}&password={PASSWORD}&sslmode=require
-                      libpq:
-                        type: string
-                        format: string
-                        example: host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require
-                      net:
-                        type: string
-                        format: string
-                        example: Server={HOST};Database={DB_NAME};Port={PORT};User Id={USER};Password={PASSWORD};Ssl Mode=Require;
-    Error:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    GetSchema:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        schemas:
-          type: array
-          items:
-            properties:
-              name:
-                description: the name of the schema
-                type: string
-              tables:
-                type: array
-                items:
-                  properties:
-                    name:
-                      description: the name of the table
-                      type: string
-                    columns:
-                      type: array
-                      items:
-                        properties:
-                          name:
-                            description: the name of the column
-                            type: string
-                          dataType:
-                            description: the sql data type of the column
-                            type: string
-                          isCustom:
-                            description: whether the column is custom or not
-                            type: boolean
-                    isCustom:
-                      description: whether the table is custom or not
-                      type: boolean
-                      default: false
-              views:
-                type: array
-                items:
-                  properties:
-                    name:
-                      description: the name of the table
-                      type: string
-                    columns:
-                      type: array
-                      items:
-                        properties:
-                          name:
-                            description: the name of the column
-                            type: string
-                          dataType:
-                            description: the sql data type of the column
-                            type: string
-                          isCustom:
-                            description: whether the column is custom or not
-                            type: boolean
-                    isCustom:
-                      description: whether the table is custom or not
-                      type: boolean
-                      default: false
-    GetStorageTables:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        schemas:
-          type: array
-          items:
-            properties:
-              name:
-                description: the name of the schema
-                type: string
-              tables:
-                description: the number of tables in the schema
-                type: integer
-              is_default_schema:
-                description: whether the schema is the default schema
-                type: boolean
-                default: false
-        tables:
-          type: array
-          items:
-            properties:
-              name:
-                description: the name of the table
-                type: string
-              schema:
-                description: the schema of the table
-                type: string
-              rows:
-                description: number of rows in the table
-                type: integer
-    StorageCopyDirectory:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        jobKey:
-          type: string
-          format: uuid
     StorageSqlConnection:
       type: object
       properties:
@@ -815,45 +654,51 @@ components:
               type: string
               format: string
               example: Server={HOST};Database={DB_NAME};Port={PORT};User Id={USER};Password={PASSWORD};Ssl Mode=Require;
-    StorageMoveFile:
+    GetStorageTables:
       type: object
       properties:
         result:
           type: string
           format: string
-        message:
-          type: string
-          format: string
-        fileInfo:
-          type: object
-          properties:
-            storageName:
-              type: string
-              format: string
-            directoryPath:
-              type: string
-              format: string
-            filename:
-              type: string
-              format: string
-    EmptyStorageTables:
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tables:
+                description: the number of tables in the schema
+                type: integer
+              is_default_schema:
+                description: whether the schema is the default schema
+                type: boolean
+                default: false
+        tables:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the table
+                type: string
+              schema:
+                description: the schema of the table
+                type: string
+              rows:
+                description: number of rows in the table
+                type: integer
+    Error:
       type: object
       properties:
         result:
           type: string
           format: string
-        dryRun:
-          type: boolean
-        emptied:
-          type: array
-          items:
-            type: string
-            description: tables which were emptied
-        failed:
-          type: array
-          items:
-            type: string
-            description: tables which failed to be emptied
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
     DbDataExport:
       type: object
       properties:
@@ -952,6 +797,115 @@ components:
                       description: whether the table is custom or not
                       type: boolean
                       default: false
+    StorageMoveFile:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        fileInfo:
+          type: object
+          properties:
+            storageName:
+              type: string
+              format: string
+            directoryPath:
+              type: string
+              format: string
+            filename:
+              type: string
+              format: string
+    StorageCopyDirectory:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+    EmptyStorageTables:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        dryRun:
+          type: boolean
+        emptied:
+          type: array
+          items:
+            type: string
+            description: tables which were emptied
+        failed:
+          type: array
+          items:
+            type: string
+            description: tables which failed to be emptied
+    GetSchema:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tables:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                          isCustom:
+                            description: whether the column is custom or not
+                            type: boolean
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+              views:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                          isCustom:
+                            description: whether the column is custom or not
+                            type: boolean
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
     StorageMoveDirectory:
       type: object
       properties:
@@ -967,6 +921,72 @@ components:
         dest:
           type: string
           format: string
+    StoragesDBConnectionStrings:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          example: 1
+        storages:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+                format: string
+              connectionInfo:
+                type: object
+                properties:
+                  raw:
+                    type: object
+                    properties:
+                      host:
+                        type: string
+                        format: string
+                      port:
+                        type: integer
+                        format: int64
+                        example: 6432
+                      dbname:
+                        type: string
+                        format: string
+                      user:
+                        type: string
+                        format: string
+                      password:
+                        type: string
+                        format: string
+                      sslmode:
+                        type: string
+                        format: string
+                  connectionStrings:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: string
+                        example: postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?sslmode=require
+                      psql:
+                        type: string
+                        format: string
+                        example: psql "host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require"
+                      jdbc:
+                        type: string
+                        format: string
+                        example: jdbc:postgresql://{HOST}:{PORT}/{DB_NAME}?user={USER}&password={PASSWORD}&sslmode=require
+                      libpq:
+                        type: string
+                        format: string
+                        example: host={HOST} port={PORT} dbname={DB_NAME} user={USER} password={PASSWORD} sslmode=require
+                      net:
+                        type: string
+                        format: string
+                        example: Server={HOST};Database={DB_NAME};Port={PORT};User Id={USER};Password={PASSWORD};Ssl Mode=Require;
   securitySchemes:
     APIKeyHeader:
       type: apiKey

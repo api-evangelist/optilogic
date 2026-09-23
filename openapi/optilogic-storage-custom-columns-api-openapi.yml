@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  description: All Optilogic users can view the endpoint documentation below, upgrade to a paid account to gain access.
   version: 1.0.0
   title: 'Optilogic REST storage : custom columns API'
   contact:
@@ -58,6 +58,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameCustomizations
+      x-operation-id-source: derived
   /storages/db-column-types:
     get:
       tags:
@@ -91,6 +93,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStoragesDbColumnTypes
+      x-operation-id-source: derived
   /storage/{storageName}/custom-column:
     post:
       tags:
@@ -191,6 +195,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: postStorageByStorageNameCustomColumn
+      x-operation-id-source: derived
     get:
       tags:
       - 'storage : custom columns'
@@ -248,6 +254,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameCustomColumn
+      x-operation-id-source: derived
     put:
       tags:
       - 'storage : custom columns'
@@ -353,6 +361,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: putStorageByStorageNameCustomColumn
+      x-operation-id-source: derived
     delete:
       tags:
       - 'storage : custom columns'
@@ -410,6 +420,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: deleteStorageByStorageNameCustomColumn
+      x-operation-id-source: derived
   /storage/{storageName}/custom-columns:
     get:
       tags:
@@ -462,6 +474,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameCustomColumns
+      x-operation-id-source: derived
   /storage/{storageName}/custom-columns/validate:
     get:
       tags:
@@ -508,6 +522,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameCustomColumnsValidate
+      x-operation-id-source: derived
   /storage/{storageName}/custom-columns/repair:
     post:
       tags:
@@ -554,8 +570,36 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: postStorageByStorageNameCustomColumnsRepair
+      x-operation-id-source: derived
 components:
   schemas:
+    GetColumnDataTypes:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 31
+        dataTypes:
+          type: array
+          items:
+            type: string
+          example:
+            result: success
+            count: 33
+            dataTypes:
+            - name: bit
+              supportsMaxLength: true
+            - name: bool
+              supportsMaxLength: false
+            - name: bytea
+              supportsMaxLength: false
+            - name: character
+              supportsMaxLength: true
     Error:
       type: object
       properties:
@@ -563,6 +607,21 @@ components:
           type: string
           format: string
         error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
           type: string
           format: string
         correlationId:
@@ -582,138 +641,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomColumn'
-    DeleteCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        message:
-          type: string
-    UpdateCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        id:
-          type: integer
-          example: 106
-        tableName:
-          type: string
-          example: your_table
-        columnName:
-          type: string
-          example: your_column
-        dataType:
-          type: string
-          example: integer
-        characterMaximumLength:
-          type: integer
-          example: 255
-        isNullable:
-          type: boolean
-          example: false
-        defaultValue:
-          type: string
-          example: null
-        isTableKeyColumn:
-          type: boolean
-          example: false
-        trueDataType:
-          type: string
-          example: text
-        isRequired:
-          type: boolean
-          example: true
-        message:
-          type: string
-    CustomColumn:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 106
-        tableName:
-          type: string
-          example: your_table
-        columnName:
-          type: string
-          example: your_column
-        dataType:
-          type: string
-          example: integer
-        characterMaximumLength:
-          type: integer
-          example: 255
-        isNullable:
-          type: boolean
-          example: false
-        defaultValue:
-          type: string
-          example: null
-        isTableKeyColumn:
-          type: boolean
-          example: false
-        trueDataType:
-          type: string
-          example: text
-        isRequired:
-          type: boolean
-          example: true
-    CustomColumnIssue:
-      type: object
-      properties:
-        type:
-          type: string
-          example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
-          enum:
-          - UnspecifiedError
-          - TableWithNoColumns
-          - MissingTable
-          - MissingColumn
-          - ExtraColumn
-          - TypeMismatch
-          - MissingMetadata
-          - MetadataDiscrepancy
-          - IsNullableMismatch
-          - UpdateTypedView
-          - MissingTypedView
-          - DefaultValueMismatch
-          - MaxLengthMismatch
-        tableName:
-          type: string
-        columnName:
-          type: string
-        expected:
-          example: types:string, number, bool, null etc.
-        actual:
-          example: types:string, number, bool, null etc.
-        description:
-          type: string
-    ValidateCustomColumns:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        count:
-          type: integer
-          example: 4
-        issues:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomColumnIssue'
-    CreateCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
     GetCustomColumn:
       type: object
       properties:
@@ -754,50 +681,45 @@ components:
             isRequired:
               type: boolean
               example: true
-    CustomColumnsResponseError:
+    CustomColumnIssue:
+      type: object
+      properties:
+        type:
+          type: string
+          example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+          enum:
+          - UnspecifiedError
+          - TableWithNoColumns
+          - MissingTable
+          - MissingColumn
+          - ExtraColumn
+          - TypeMismatch
+          - MissingMetadata
+          - MetadataDiscrepancy
+          - IsNullableMismatch
+          - UpdateTypedView
+          - MissingTypedView
+          - DefaultValueMismatch
+          - MaxLengthMismatch
+        tableName:
+          type: string
+        columnName:
+          type: string
+        expected:
+          example: types:string, number, bool, null etc.
+        actual:
+          example: types:string, number, bool, null etc.
+        description:
+          type: string
+    DeleteCustomColumn:
       type: object
       properties:
         result:
           type: string
+          format: string
+          example: success
         message:
           type: string
-        errorDetails:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
-                type: string
-              tableName:
-                type: string
-              columnName:
-                type: string
-              expected:
-                example: types:string, number, bool, null etc.
-              actual:
-                example: types:string, number, bool, null etc.
-              description:
-                type: expected value
-      required:
-      - result
-      - message
-      - errorDetails
-    Forbidden:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
     GetCustomizations:
       type: object
       properties:
@@ -850,6 +772,95 @@ components:
                       description: whether the table is custom or not
                       type: boolean
                       default: false
+    UpdateCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        id:
+          type: integer
+          example: 106
+        tableName:
+          type: string
+          example: your_table
+        columnName:
+          type: string
+          example: your_column
+        dataType:
+          type: string
+          example: integer
+        characterMaximumLength:
+          type: integer
+          example: 255
+        isNullable:
+          type: boolean
+          example: false
+        defaultValue:
+          type: string
+          example: null
+        isTableKeyColumn:
+          type: boolean
+          example: false
+        trueDataType:
+          type: string
+          example: text
+        isRequired:
+          type: boolean
+          example: true
+        message:
+          type: string
+    CustomColumnsResponseError:
+      type: object
+      properties:
+        result:
+          type: string
+        message:
+          type: string
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+                type: string
+              tableName:
+                type: string
+              columnName:
+                type: string
+              expected:
+                example: types:string, number, bool, null etc.
+              actual:
+                example: types:string, number, bool, null etc.
+              description:
+                type: expected value
+      required:
+      - result
+      - message
+      - errorDetails
+    CreateCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+    ValidateCustomColumns:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 4
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumnIssue'
     RepairCustomColumns:
       type: object
       properties:
@@ -871,32 +882,39 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomColumnIssue'
-    GetColumnDataTypes:
+    CustomColumn:
       type: object
       properties:
-        result:
-          type: string
-          format: string
-          example: success
-        count:
+        id:
           type: integer
-          example: 31
-        dataTypes:
-          type: array
-          items:
-            type: string
-          example:
-            result: success
-            count: 33
-            dataTypes:
-            - name: bit
-              supportsMaxLength: true
-            - name: bool
-              supportsMaxLength: false
-            - name: bytea
-              supportsMaxLength: false
-            - name: character
-              supportsMaxLength: true
+          example: 106
+        tableName:
+          type: string
+          example: your_table
+        columnName:
+          type: string
+          example: your_column
+        dataType:
+          type: string
+          example: integer
+        characterMaximumLength:
+          type: integer
+          example: 255
+        isNullable:
+          type: boolean
+          example: false
+        defaultValue:
+          type: string
+          example: null
+        isTableKeyColumn:
+          type: boolean
+          example: false
+        trueDataType:
+          type: string
+          example: text
+        isRequired:
+          type: boolean
+          example: true
   securitySchemes:
     APIKeyHeader:
       type: apiKey

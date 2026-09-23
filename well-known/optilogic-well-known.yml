@@ -1,4 +1,4 @@
-generated: '2026-08-26'
+generated: '2026-09-19'
 method: probed
 source: live GET of /.well-known/* on every apis.yml and OpenAPI servers host
 hosts:
@@ -26,6 +26,15 @@ hosts:
     status: 404
   - path: /.well-known/agent.json
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: optilogic-mcp-oauth-protected-resource.json
+    bytes: 137
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: optilogic-mcp-oauth-authorization-server.json
+    bytes: 583
+  path_echo_control: passed
 - host: auth.accounts.optilogic.app
   documents:
   - path: /auth/realms/che/.well-known/openid-configuration
@@ -104,3 +113,19 @@ summary:
   agent_card: false
   note: No security.txt on any host, so no SecurityTxt pointer is emitted. No agent card on any host,
     so no a2a/ artifact is written at all.
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://mcp.optilogic.app
+    path: /.well-known/oauth-protected-resource
+    file: optilogic-mcp-oauth-protected-resource.json
+  - host: https://mcp.optilogic.app
+    path: /.well-known/oauth-authorization-server
+    file: optilogic-mcp-oauth-authorization-server.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host
+note: 'MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s
+  primary hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed
+  and were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'

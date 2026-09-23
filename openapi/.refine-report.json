@@ -1,0 +1,40 @@
+{
+  "provider": "optilogic",
+  "sources": [
+    "_original/optilogic-rest-api-openapi.json"
+  ],
+  "outputs": [
+    "optilogic-authentication-api-openapi.yml",
+    "optilogic-job-api-openapi.yml",
+    "optilogic-storage-api-openapi.yml",
+    "optilogic-storage-custom-columns-api-openapi.yml",
+    "optilogic-storage-custom-tables-api-openapi.yml",
+    "optilogic-storage-labels-api-openapi.yml",
+    "optilogic-storage-sharing-api-openapi.yml",
+    "optilogic-storage-tags-api-openapi.yml",
+    "optilogic-storage-templates-api-openapi.yml",
+    "optilogic-utility-api-openapi.yml",
+    "optilogic-workspace-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "optilogic-rest-api-openapi.json: upgraded swagger 2.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "optilogic-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-job-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-custom-columns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-custom-tables-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-labels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-sharing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-storage-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-utility-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "optilogic-workspace-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

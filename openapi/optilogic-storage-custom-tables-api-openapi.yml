@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  description: "All Optilogic users can view the endpoint documentation below, <a href='https://optilogic.app/#/user-account?tab=pricing'>upgrade to a paid account</a> to gain access.<br /><br />Once you have api access, use the `refreshApiKey` endpoint with your account login information or use the `Quick Start` form below to get started.\n### Installing Additional Python Packages <a id=\"installing-additional-python-packages\"></a>\nWhen a job is run - such as when using the **Job POST** endpoint - the system will check the directoryPath specified in the POST call for a file named `requirements.txt`. If the file exists, then the system will attempt to install all packages specified by running `pip install -r requirements.txt` before running the file specified in the filePath parameter.\n### Accessing your Files <a id=\"accessing-your-files\"></a>\nYour files are stored in the */projects* directory of the workspace. Files saved in this directory are available to your *Atlas* workspace and to REST API endpoints.\nAll directory paths passed as a *directoryPath*, *sourceDirectoryPath*, or *targetDirectoryPath* parameter are relative to the */projects* directory.\nThis means you must **not** include */projects* as part of the path string.\n\nExample:\n  - directoryPath = \"pyomo-examples/models/diet-problem\"\n  - filePath = \"diet-problem.py\"\n\nExample:\n  - directoryPath = \".\"\n  - filePath = \"my-model.py\"\n\n<br>\n\n## Example Application <a id=\"example-app\"></a>\n\n<a target=\"_blank\" href=\"https://optilogic.github.io/optiapp-web-demo/\">OptiJS Demo</a>\n\nThis demo application uses the OptiJS client library to run and monitor jobs from Python modules on a users' account. Custom applications can be quickly created on top of the Optilogic API using the <a target=\"_blank\" href=\"https://cdn.optilogic.app/web/optijs/api.js\">OptiJS</a> and <a target=\"_blank\" href=\"https://pypi.org/project/optilogic\">OptiPy</a> client libraries.\n\n\n<br>\n"
+  description: All Optilogic users can view the endpoint documentation below, upgrade to a paid account to gain access.
   version: 1.0.0
   title: 'Optilogic REST storage : custom tables API'
   contact:
@@ -52,12 +52,14 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: getStorageByStorageNameCustomTables
+      x-operation-id-source: derived
   /storage/{storageName}/custom-table:
     post:
       tags:
       - 'storage : custom tables'
-      summary: Create a custom table.
-      description: Creates a custom table with an id column as its primary key.  Table will be created with lowercased letters.
+      summary: Create a custom table
+      description: Creates a custom table with an id column as its primary key. Table will be created with lowercased letters.
       parameters:
       - name: storageName
         in: path
@@ -98,11 +100,13 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: postStorageByStorageNameCustomTable
+      x-operation-id-source: derived
     put:
       tags:
       - 'storage : custom tables'
-      summary: Rename a custom table.
-      description: Renames a custom table.  Table will be renamed with lowercased letters.
+      summary: Rename a custom table
+      description: Renames a custom table. Table will be renamed with lowercased letters.
       parameters:
       - name: storageName
         in: path
@@ -149,10 +153,12 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: putStorageByStorageNameCustomTable
+      x-operation-id-source: derived
     delete:
       tags:
       - 'storage : custom tables'
-      summary: Delete a custom table.
+      summary: Delete a custom table
       description: Deletes a custom table.
       parameters:
       - name: storageName
@@ -194,16 +200,10 @@ paths:
                 $ref: '#/components/schemas/Error'
       security:
       - APIKeyHeader: []
+      operationId: deleteStorageByStorageNameCustomTable
+      x-operation-id-source: derived
 components:
   schemas:
-    CreateCustomTable:
-      type: object
-      properties:
-        tableName: null
-        result:
-          type: string
-          format: string
-          example: success
     Error:
       type: object
       properties:
@@ -216,15 +216,21 @@ components:
         correlationId:
           type: string
           format: uuid
-    DeleteCustomTable:
+    CreateCustomTable:
+      type: object
+      properties:
+        tableName: null
+        result:
+          type: string
+          format: string
+          example: success
+    UpdateCustomTable:
       type: object
       properties:
         result:
           type: string
           format: string
           example: success
-        message:
-          type: string
     GetCustomTables:
       type: object
       properties:
@@ -236,13 +242,15 @@ components:
           type: array
           items:
             type: string
-    UpdateCustomTable:
+    DeleteCustomTable:
       type: object
       properties:
         result:
           type: string
           format: string
           example: success
+        message:
+          type: string
   securitySchemes:
     APIKeyHeader:
       type: apiKey
