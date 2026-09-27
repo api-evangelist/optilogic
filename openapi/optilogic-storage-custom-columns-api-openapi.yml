@@ -574,6 +574,108 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    DeleteCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        message:
+          type: string
+    ValidateCustomColumns:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 4
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumnIssue'
+    GetCustomizations:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              tables:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+              views:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    columns:
+                      type: array
+                      items:
+                        properties:
+                          name:
+                            description: the name of the column
+                            type: string
+                          dataType:
+                            description: the sql data type of the column
+                            type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
     GetColumnDataTypes:
       type: object
       properties:
@@ -600,47 +702,35 @@ components:
               supportsMaxLength: false
             - name: character
               supportsMaxLength: true
-    Error:
+    CustomColumnsResponseError:
       type: object
       properties:
         result:
           type: string
-          format: string
-        error:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    Forbidden:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
         message:
           type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    GetAllCustomColumns:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        count:
-          type: integer
-          example: 3
-        customColumns:
+        errorDetails:
           type: array
           items:
-            $ref: '#/components/schemas/CustomColumn'
+            type: object
+            properties:
+              type:
+                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+                type: string
+              tableName:
+                type: string
+              columnName:
+                type: string
+              expected:
+                example: types:string, number, bool, null etc.
+              actual:
+                example: types:string, number, bool, null etc.
+              description:
+                type: expected value
+      required:
+      - result
+      - message
+      - errorDetails
     GetCustomColumn:
       type: object
       properties:
@@ -711,67 +801,60 @@ components:
           example: types:string, number, bool, null etc.
         description:
           type: string
-    DeleteCustomColumn:
+    CustomColumn:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 106
+        tableName:
+          type: string
+          example: your_table
+        columnName:
+          type: string
+          example: your_column
+        dataType:
+          type: string
+          example: integer
+        characterMaximumLength:
+          type: integer
+          example: 255
+        isNullable:
+          type: boolean
+          example: false
+        defaultValue:
+          type: string
+          example: null
+        isTableKeyColumn:
+          type: boolean
+          example: false
+        trueDataType:
+          type: string
+          example: text
+        isRequired:
+          type: boolean
+          example: true
+    GetAllCustomColumns:
       type: object
       properties:
         result:
           type: string
           format: string
           example: success
-        message:
-          type: string
-    GetCustomizations:
+        count:
+          type: integer
+          example: 3
+        customColumns:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomColumn'
+    CreateCustomColumn:
       type: object
       properties:
         result:
           type: string
           format: string
-        schemas:
-          type: array
-          items:
-            properties:
-              tables:
-                type: array
-                items:
-                  properties:
-                    name:
-                      description: the name of the table
-                      type: string
-                    columns:
-                      type: array
-                      items:
-                        properties:
-                          name:
-                            description: the name of the column
-                            type: string
-                          dataType:
-                            description: the sql data type of the column
-                            type: string
-                    isCustom:
-                      description: whether the table is custom or not
-                      type: boolean
-                      default: false
-              views:
-                type: array
-                items:
-                  properties:
-                    name:
-                      description: the name of the table
-                      type: string
-                    columns:
-                      type: array
-                      items:
-                        properties:
-                          name:
-                            description: the name of the column
-                            type: string
-                          dataType:
-                            description: the sql data type of the column
-                            type: string
-                    isCustom:
-                      description: whether the table is custom or not
-                      type: boolean
-                      default: false
+          example: success
     UpdateCustomColumn:
       type: object
       properties:
@@ -811,56 +894,6 @@ components:
           example: true
         message:
           type: string
-    CustomColumnsResponseError:
-      type: object
-      properties:
-        result:
-          type: string
-        message:
-          type: string
-        errorDetails:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
-                type: string
-              tableName:
-                type: string
-              columnName:
-                type: string
-              expected:
-                example: types:string, number, bool, null etc.
-              actual:
-                example: types:string, number, bool, null etc.
-              description:
-                type: expected value
-      required:
-      - result
-      - message
-      - errorDetails
-    CreateCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-    ValidateCustomColumns:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        count:
-          type: integer
-          example: 4
-        issues:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomColumnIssue'
     RepairCustomColumns:
       type: object
       properties:
@@ -882,39 +915,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomColumnIssue'
-    CustomColumn:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 106
-        tableName:
-          type: string
-          example: your_table
-        columnName:
-          type: string
-          example: your_column
-        dataType:
-          type: string
-          example: integer
-        characterMaximumLength:
-          type: integer
-          example: 255
-        isNullable:
-          type: boolean
-          example: false
-        defaultValue:
-          type: string
-          example: null
-        isTableKeyColumn:
-          type: boolean
-          example: false
-        trueDataType:
-          type: string
-          example: text
-        isRequired:
-          type: boolean
-          example: true
   securitySchemes:
     APIKeyHeader:
       type: apiKey

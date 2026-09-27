@@ -204,6 +204,14 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CreateCustomTable:
+      type: object
+      properties:
+        tableName: null
+        result:
+          type: string
+          format: string
+          example: success
     Error:
       type: object
       properties:
@@ -216,21 +224,6 @@ components:
         correlationId:
           type: string
           format: uuid
-    CreateCustomTable:
-      type: object
-      properties:
-        tableName: null
-        result:
-          type: string
-          format: string
-          example: success
-    UpdateCustomTable:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
     GetCustomTables:
       type: object
       properties:
@@ -251,6 +244,13 @@ components:
           example: success
         message:
           type: string
+    UpdateCustomTable:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
   securitySchemes:
     APIKeyHeader:
       type: apiKey
