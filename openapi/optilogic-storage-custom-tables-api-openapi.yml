@@ -204,14 +204,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateCustomTable:
-      type: object
-      properties:
-        tableName: null
-        result:
-          type: string
-          format: string
-          example: success
     Error:
       type: object
       properties:
@@ -235,6 +227,13 @@ components:
           type: array
           items:
             type: string
+    UpdateCustomTable:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
     DeleteCustomTable:
       type: object
       properties:
@@ -244,9 +243,10 @@ components:
           example: success
         message:
           type: string
-    UpdateCustomTable:
+    CreateCustomTable:
       type: object
       properties:
+        tableName: null
         result:
           type: string
           format: string

@@ -606,90 +606,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    StorageMoveFile:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        fileInfo:
-          type: object
-          properties:
-            storageName:
-              type: string
-              format: string
-            directoryPath:
-              type: string
-              format: string
-            filename:
-              type: string
-              format: string
-    GetDbObjects:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        schemas:
-          type: array
-          items:
-            properties:
-              name:
-                description: the name of the schema
-                type: string
-              tableCount:
-                type: number
-              viewCount:
-                type: number
-              isDefault:
-                type: boolean
-              tables:
-                type: array
-                items:
-                  properties:
-                    name:
-                      description: the name of the table
-                      type: string
-                    rows:
-                      type: number
-                    type:
-                      type: string
-                    category:
-                      type: string
-                    categoryOrder:
-                      type: string
-                    technology:
-                      type: string
-                    isCustom:
-                      description: whether the table is custom or not
-                      type: boolean
-                      default: false
-                    abbreviatedName:
-                      type: string
-              views:
-                type: array
-                items:
-                  properties:
-                    name:
-                      description: the name of the table
-                      type: string
-                    rows:
-                      type: number
-                    type:
-                      type: string
-                    category:
-                      type: string
-                    categoryOrder:
-                      type: string
-                    technology:
-                      type: string
-                    isCustom:
-                      description: whether the table is custom or not
-                      type: boolean
-                      default: false
     StoragesDBConnectionStrings:
       type: object
       properties:
@@ -768,6 +684,200 @@ components:
         correlationId:
           type: string
           format: uuid
+    GetStorageTables:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tables:
+                description: the number of tables in the schema
+                type: integer
+              is_default_schema:
+                description: whether the schema is the default schema
+                type: boolean
+                default: false
+        tables:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the table
+                type: string
+              schema:
+                description: the schema of the table
+                type: string
+              rows:
+                description: number of rows in the table
+                type: integer
+    StorageMoveDirectory:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        storageName:
+          type: string
+          format: string
+        dest:
+          type: string
+          format: string
+    StorageCopyDirectory:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+    GetDbObjects:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        schemas:
+          type: array
+          items:
+            properties:
+              name:
+                description: the name of the schema
+                type: string
+              tableCount:
+                type: number
+              viewCount:
+                type: number
+              isDefault:
+                type: boolean
+              tables:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    rows:
+                      type: number
+                    type:
+                      type: string
+                    category:
+                      type: string
+                    categoryOrder:
+                      type: string
+                    technology:
+                      type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+                    abbreviatedName:
+                      type: string
+              views:
+                type: array
+                items:
+                  properties:
+                    name:
+                      description: the name of the table
+                      type: string
+                    rows:
+                      type: number
+                    type:
+                      type: string
+                    category:
+                      type: string
+                    categoryOrder:
+                      type: string
+                    technology:
+                      type: string
+                    isCustom:
+                      description: whether the table is custom or not
+                      type: boolean
+                      default: false
+    EmptyStorageTables:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        dryRun:
+          type: boolean
+        emptied:
+          type: array
+          items:
+            type: string
+            description: tables which were emptied
+        failed:
+          type: array
+          items:
+            type: string
+            description: tables which failed to be emptied
+    StorageMoveFile:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        fileInfo:
+          type: object
+          properties:
+            storageName:
+              type: string
+              format: string
+            directoryPath:
+              type: string
+              format: string
+            filename:
+              type: string
+              format: string
+    DbDataExport:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        storageId:
+          type: string
+          format: uuid
+        storageName:
+          type: string
+          format: string
+        sourceSchema:
+          type: string
+          format: string
+        sourceGroup:
+          type: string
+          format: string
+        sourceList:
+          type: array
+          items:
+            type: string
+            description: tables/views which were specified to export
+        sourceQuery:
+          type: string
+          format: string
+        format:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
     GetSchema:
       type: object
       properties:
@@ -829,41 +939,6 @@ components:
                       description: whether the table is custom or not
                       type: boolean
                       default: false
-    DbDataExport:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        storageId:
-          type: string
-          format: uuid
-        storageName:
-          type: string
-          format: string
-        sourceSchema:
-          type: string
-          format: string
-        sourceGroup:
-          type: string
-          format: string
-        sourceList:
-          type: array
-          items:
-            type: string
-            description: tables/views which were specified to export
-        sourceQuery:
-          type: string
-          format: string
-        format:
-          type: string
-          format: string
-        jobKey:
-          type: string
-          format: uuid
     StorageSqlConnection:
       type: object
       properties:
@@ -912,81 +987,6 @@ components:
               type: string
               format: string
               example: Server={HOST};Database={DB_NAME};Port={PORT};User Id={USER};Password={PASSWORD};Ssl Mode=Require;
-    StorageMoveDirectory:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        storageName:
-          type: string
-          format: string
-        dest:
-          type: string
-          format: string
-    StorageCopyDirectory:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        jobKey:
-          type: string
-          format: uuid
-    EmptyStorageTables:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        dryRun:
-          type: boolean
-        emptied:
-          type: array
-          items:
-            type: string
-            description: tables which were emptied
-        failed:
-          type: array
-          items:
-            type: string
-            description: tables which failed to be emptied
-    GetStorageTables:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        schemas:
-          type: array
-          items:
-            properties:
-              name:
-                description: the name of the schema
-                type: string
-              tables:
-                description: the number of tables in the schema
-                type: integer
-              is_default_schema:
-                description: whether the schema is the default schema
-                type: boolean
-                default: false
-        tables:
-          type: array
-          items:
-            properties:
-              name:
-                description: the name of the table
-                type: string
-              schema:
-                description: the schema of the table
-                type: string
-              rows:
-                description: number of rows in the table
-                type: integer
   securitySchemes:
     APIKeyHeader:
       type: apiKey

@@ -574,6 +574,51 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    GetColumnDataTypes:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        count:
+          type: integer
+          example: 31
+        dataTypes:
+          type: array
+          items:
+            type: string
+          example:
+            result: success
+            count: 33
+            dataTypes:
+            - name: bit
+              supportsMaxLength: true
+            - name: bool
+              supportsMaxLength: false
+            - name: bytea
+              supportsMaxLength: false
+            - name: character
+              supportsMaxLength: true
+    CreateCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
     Forbidden:
       type: object
       properties:
@@ -589,15 +634,35 @@ components:
         correlationId:
           type: string
           format: uuid
-    DeleteCustomColumn:
+    CustomColumnsResponseError:
       type: object
       properties:
         result:
           type: string
-          format: string
-          example: success
         message:
           type: string
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+                type: string
+              tableName:
+                type: string
+              columnName:
+                type: string
+              expected:
+                example: types:string, number, bool, null etc.
+              actual:
+                example: types:string, number, bool, null etc.
+              description:
+                type: expected value
+      required:
+      - result
+      - message
+      - errorDetails
     ValidateCustomColumns:
       type: object
       properties:
@@ -612,6 +677,46 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomColumnIssue'
+    GetCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        customColumn:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 106
+            tableName:
+              type: string
+              example: your_table
+            columnName:
+              type: string
+              example: your_column
+            dataType:
+              type: string
+              example: integer
+            characterMaximumLength:
+              type: integer
+              example: 255
+            isNullable:
+              type: boolean
+              example: false
+            defaultValue:
+              type: string
+              example: null
+            isTableKeyColumn:
+              type: boolean
+              example: false
+            trueDataType:
+              type: string
+              example: text
+            isRequired:
+              type: boolean
+              example: true
     GetCustomizations:
       type: object
       properties:
@@ -664,142 +769,44 @@ components:
                       description: whether the table is custom or not
                       type: boolean
                       default: false
-    Error:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    GetColumnDataTypes:
+    UpdateCustomColumn:
       type: object
       properties:
         result:
           type: string
           format: string
           example: success
-        count:
+        id:
           type: integer
-          example: 31
-        dataTypes:
-          type: array
-          items:
-            type: string
-          example:
-            result: success
-            count: 33
-            dataTypes:
-            - name: bit
-              supportsMaxLength: true
-            - name: bool
-              supportsMaxLength: false
-            - name: bytea
-              supportsMaxLength: false
-            - name: character
-              supportsMaxLength: true
-    CustomColumnsResponseError:
-      type: object
-      properties:
-        result:
-          type: string
-        message:
-          type: string
-        errorDetails:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
-                type: string
-              tableName:
-                type: string
-              columnName:
-                type: string
-              expected:
-                example: types:string, number, bool, null etc.
-              actual:
-                example: types:string, number, bool, null etc.
-              description:
-                type: expected value
-      required:
-      - result
-      - message
-      - errorDetails
-    GetCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        customColumn:
-          type: object
-          properties:
-            id:
-              type: integer
-              example: 106
-            tableName:
-              type: string
-              example: your_table
-            columnName:
-              type: string
-              example: your_column
-            dataType:
-              type: string
-              example: integer
-            characterMaximumLength:
-              type: integer
-              example: 255
-            isNullable:
-              type: boolean
-              example: false
-            defaultValue:
-              type: string
-              example: null
-            isTableKeyColumn:
-              type: boolean
-              example: false
-            trueDataType:
-              type: string
-              example: text
-            isRequired:
-              type: boolean
-              example: true
-    CustomColumnIssue:
-      type: object
-      properties:
-        type:
-          type: string
-          example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
-          enum:
-          - UnspecifiedError
-          - TableWithNoColumns
-          - MissingTable
-          - MissingColumn
-          - ExtraColumn
-          - TypeMismatch
-          - MissingMetadata
-          - MetadataDiscrepancy
-          - IsNullableMismatch
-          - UpdateTypedView
-          - MissingTypedView
-          - DefaultValueMismatch
-          - MaxLengthMismatch
+          example: 106
         tableName:
           type: string
+          example: your_table
         columnName:
           type: string
-        expected:
-          example: types:string, number, bool, null etc.
-        actual:
-          example: types:string, number, bool, null etc.
-        description:
+          example: your_column
+        dataType:
+          type: string
+          example: integer
+        characterMaximumLength:
+          type: integer
+          example: 255
+        isNullable:
+          type: boolean
+          example: false
+        defaultValue:
+          type: string
+          example: null
+        isTableKeyColumn:
+          type: boolean
+          example: false
+        trueDataType:
+          type: string
+          example: text
+        isRequired:
+          type: boolean
+          example: true
+        message:
           type: string
     CustomColumn:
       type: object
@@ -848,52 +855,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomColumn'
-    CreateCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-    UpdateCustomColumn:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-          example: success
-        id:
-          type: integer
-          example: 106
-        tableName:
-          type: string
-          example: your_table
-        columnName:
-          type: string
-          example: your_column
-        dataType:
-          type: string
-          example: integer
-        characterMaximumLength:
-          type: integer
-          example: 255
-        isNullable:
-          type: boolean
-          example: false
-        defaultValue:
-          type: string
-          example: null
-        isTableKeyColumn:
-          type: boolean
-          example: false
-        trueDataType:
-          type: string
-          example: text
-        isRequired:
-          type: boolean
-          example: true
-        message:
-          type: string
     RepairCustomColumns:
       type: object
       properties:
@@ -915,6 +876,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CustomColumnIssue'
+    CustomColumnIssue:
+      type: object
+      properties:
+        type:
+          type: string
+          example: UnspecifiedError,TableWithNoColumns,MissingTable,MissingColumn,ExtraColumn,TypeMismatch,MissingMetadata,MetadataDiscrepancy,IsNullableMismatch,UpdateTypedView,MissingTypedView,DefaultValueMismatch,MaxLengthMismatch
+          enum:
+          - UnspecifiedError
+          - TableWithNoColumns
+          - MissingTable
+          - MissingColumn
+          - ExtraColumn
+          - TypeMismatch
+          - MissingMetadata
+          - MetadataDiscrepancy
+          - IsNullableMismatch
+          - UpdateTypedView
+          - MissingTypedView
+          - DefaultValueMismatch
+          - MaxLengthMismatch
+        tableName:
+          type: string
+        columnName:
+          type: string
+        expected:
+          example: types:string, number, bool, null etc.
+        actual:
+          example: types:string, number, bool, null etc.
+        description:
+          type: string
+    DeleteCustomColumn:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+          example: success
+        message:
+          type: string
   securitySchemes:
     APIKeyHeader:
       type: apiKey
