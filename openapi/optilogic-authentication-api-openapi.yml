@@ -58,18 +58,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
     RefreshedApiKey:
       type: object
       properties:
@@ -91,6 +79,18 @@ components:
         expiresIn:
           type: integer
           format: int64
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
   securitySchemes:
     APIKeyHeader:
       type: apiKey

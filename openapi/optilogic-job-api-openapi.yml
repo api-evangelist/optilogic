@@ -103,6 +103,69 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    JobStatusCounts:
+      type: object
+      properties:
+        submitted:
+          type: integer
+          format: int64
+        starting:
+          type: integer
+          format: int64
+        started:
+          type: integer
+          format: int64
+        running:
+          type: integer
+          format: int64
+        done:
+          type: integer
+          format: int64
+        stopping:
+          type: integer
+          format: int64
+        stopped:
+          type: integer
+          format: int64
+        canceling:
+          type: integer
+          format: int64
+        cancelled:
+          type: integer
+          format: int64
+        error:
+          type: integer
+          format: int64
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    JobDetailsResourceConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          format: string
+        cpu:
+          type: string
+          format: string
+        ram:
+          type: string
+          format: string
+        run_rate:
+          type: integer
+          format: int64
     DbDataExportJob:
       type: object
       properties:
@@ -159,54 +222,6 @@ components:
         correlationId:
           type: string
           format: uuid
-    Forbidden:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    JobStatusCounts:
-      type: object
-      properties:
-        submitted:
-          type: integer
-          format: int64
-        starting:
-          type: integer
-          format: int64
-        started:
-          type: integer
-          format: int64
-        running:
-          type: integer
-          format: int64
-        done:
-          type: integer
-          format: int64
-        stopping:
-          type: integer
-          format: int64
-        stopped:
-          type: integer
-          format: int64
-        canceling:
-          type: integer
-          format: int64
-        cancelled:
-          type: integer
-          format: int64
-        error:
-          type: integer
-          format: int64
     DbDataExportJobDetailsInfo:
       type: object
       properties:
@@ -238,21 +253,6 @@ components:
             type: string
         resourceConfig:
           $ref: '#/components/schemas/JobDetailsResourceConfig'
-    JobDetailsResourceConfig:
-      type: object
-      properties:
-        name:
-          type: string
-          format: string
-        cpu:
-          type: string
-          format: string
-        ram:
-          type: string
-          format: string
-        run_rate:
-          type: integer
-          format: int64
   securitySchemes:
     APIKeyHeader:
       type: apiKey

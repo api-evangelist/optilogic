@@ -306,33 +306,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    Forbidden:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
     SecretsList:
       type: object
       properties:
@@ -357,15 +330,21 @@ components:
                 type: string
               created:
                 type: string
-    SecretDelete:
+    Forbidden:
       type: object
       properties:
         result:
           type: string
-        id:
+          format: string
+        error:
           type: string
-        name:
+          format: string
+        message:
           type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
     Secret:
       type: object
       properties:
@@ -384,6 +363,27 @@ components:
         type:
           type: string
         created:
+          type: string
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    SecretDelete:
+      type: object
+      properties:
+        result:
+          type: string
+        id:
+          type: string
+        name:
           type: string
   securitySchemes:
     APIKeyHeader:

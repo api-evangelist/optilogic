@@ -1596,152 +1596,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    JobMetrics:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        max:
-          type: object
-          properties:
-            memoryPercent:
-              type: number
-              format: double
-            memoryResident:
-              type: number
-              format: double
-            memoryAvaliable:
-              type: number
-              format: double
-            cpuPercent:
-              type: number
-              format: double
-            cpuUsed:
-              type: number
-              format: double
-            cpuAvaliable:
-              type: number
-              format: double
-            processCount:
-              type: integer
-              format: int64
-        count:
-          type: integer
-          format: int64
-        records:
-          type: array
-          items:
-            type: object
-            properties:
-              timestamp:
-                type: integer
-                format: int64
-              datetime:
-                type: string
-                format: date-time
-              memoryPercent:
-                type: number
-                format: double
-              memoryResident:
-                type: number
-                format: double
-              memoryAvaliable:
-                type: number
-                format: double
-              cpuPercent:
-                type: number
-                format: double
-              cpuUsed:
-                type: number
-                format: double
-              cpuAvaliable:
-                type: number
-                format: double
-              processCount:
-                type: integer
-                format: int64
-    JobDelete:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        jobKey:
-          type: string
-          format: uuid
-        status:
-          type: string
-          format: string
-        jobInfo:
-          $ref: '#/components/schemas/JobDetailsInfo'
-    FileShortInfoPath:
-      type: object
-      properties:
-        filename:
-          type: string
-          format: string
-        directoryPath:
-          type: string
-          format: string
-        filePath:
-          type: string
-          format: string
-        contentLength:
-          type: integer
-          format: int64
-    WorkspaceInfo:
-      type: object
-      properties:
-        status:
-          type: string
-          format: string
-          description: workspace state
-        name:
-          type: string
-          format: string
-        key:
-          type: string
-          format: string
-        stack:
-          type: string
-          format: string
-    JobStatusCounts:
-      type: object
-      properties:
-        submitted:
-          type: integer
-          format: int64
-        starting:
-          type: integer
-          format: int64
-        started:
-          type: integer
-          format: int64
-        running:
-          type: integer
-          format: int64
-        done:
-          type: integer
-          format: int64
-        stopping:
-          type: integer
-          format: int64
-        stopped:
-          type: integer
-          format: int64
-        canceling:
-          type: integer
-          format: int64
-        cancelled:
-          type: integer
-          format: int64
-        error:
-          type: integer
-          format: int64
     JobDetailsResourceConfig:
       type: object
       properties:
@@ -1757,97 +1611,6 @@ components:
         run_rate:
           type: integer
           format: int64
-    JobLedger:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        count:
-          type: integer
-          format: int64
-        records:
-          type: array
-          items:
-            type: object
-            properties:
-              timestamp:
-                type: integer
-                format: int64
-              datetime:
-                type: string
-                format: date-time
-              key:
-                type: string
-                format: string
-              message:
-                type: string
-                format: string
-    WorkspaceList:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        count:
-          type: integer
-          format: int64
-        workspaces:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkspaceInfo'
-    ErrorFileCopy:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        copyStatus:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        sourceFileInfo:
-          $ref: '#/components/schemas/FileMicroInfo'
-        targetFileInfo:
-          $ref: '#/components/schemas/FileMicroInfo'
-        correlationId:
-          type: string
-          format: uuid
-    CopyFile:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        copyStatus:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        sourceFileInfo:
-          $ref: '#/components/schemas/FileMicroInfo'
-        targetFileInfo:
-          $ref: '#/components/schemas/FileMicroInfo'
-    BatchPost:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        jobKey:
-          type: string
-          format: uuid
-        batch:
-          type: string
-          format: string
-        jobInfo:
-          $ref: '#/components/schemas/JobDetailsInfo'
     JobListFilters:
       type: object
       properties:
@@ -1869,106 +1632,14 @@ components:
         tags:
           type: string
           format: string
-    FileDelete:
+    UploadFile:
       type: object
       properties:
         result:
           type: string
           format: string
         fileInfo:
-          $ref: '#/components/schemas/FileMicroInfo'
-    JobListStats:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        count:
-          type: integer
-          format: int64
-        statusCounts:
-          $ref: '#/components/schemas/JobStatusCounts'
-        tagCounts:
-          $ref: '#/components/schemas/JobTagCounts'
-        filters:
-          $ref: '#/components/schemas/JobListFilters'
-    JobPost:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        jobKey:
-          type: string
-          format: uuid
-        jobInfo:
-          $ref: '#/components/schemas/JobDetailsInfo'
-    ErrorFileShare:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        sourceFileInfo:
-          $ref: '#/components/schemas/FileMicroInfo'
-        targetUsers:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    Error:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    Forbidden:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        message:
-          type: string
-          format: string
-        correlationId:
-          type: string
-          format: uuid
-    JobList:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        count:
-          type: integer
-          format: int64
-        statusCounts:
-          $ref: '#/components/schemas/JobStatusCounts'
-        tagCounts:
-          $ref: '#/components/schemas/JobTagCounts'
-        filters:
-          $ref: '#/components/schemas/JobListFilters'
-        jobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobInfo'
+          $ref: '#/components/schemas/FileShortInfo'
     FolderShare:
       type: object
       properties:
@@ -2034,6 +1705,496 @@ components:
           type: array
           items:
             type: string
+    File:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        workspace:
+          type: string
+          format: string
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        filePath:
+          type: string
+          format: string
+        lastModified:
+          type: string
+          format: date-time
+        contentLength:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date-time
+        fileCreatedOn:
+          type: string
+          format: date-time
+        fileLastWriteOn:
+          type: string
+          format: date-time
+        fileChangeOn:
+          type: string
+          format: date-time
+    Job:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        submittedDatetime:
+          type: string
+          format: date-time
+        startDatetime:
+          type: string
+          format: date-time
+        endDatetime:
+          type: string
+          format: date-time
+        runTime:
+          type: string
+          format: timespan
+        status:
+          type: string
+          format: string
+        phase:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    JobInfo:
+      type: object
+      properties:
+        jobKey:
+          type: string
+          format: uuid
+        submittedDatetime:
+          type: string
+          format: date-time
+        startDatetime:
+          type: string
+          format: date-time
+        endDatetime:
+          type: string
+          format: date-time
+        runTime:
+          type: string
+          format: timespan
+        status:
+          type: string
+          format: string
+        phase:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    FileList:
+      type: object
+      required:
+      - result
+      - count
+      - files
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileShortInfoPath'
+        directories:
+          type: array
+          items:
+            type: string
+    ErrorFileCopy:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        copyStatus:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        correlationId:
+          type: string
+          format: uuid
+    ErrorFolderShare:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        sourceDirectoryPath:
+          type: string
+          format: string
+        targetUsers:
+          type: string
+          format: string
+        includeHidden:
+          type: boolean
+          format: boolean
+        correlationId:
+          type: string
+          format: uuid
+    FileDelete:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        fileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+    JobMetricsStats:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        max:
+          type: object
+          properties:
+            memoryPercent:
+              type: number
+              format: double
+            memoryResident:
+              type: number
+              format: double
+            memoryAvaliable:
+              type: number
+              format: double
+            cpuPercent:
+              type: number
+              format: double
+            cpuUsed:
+              type: number
+              format: double
+            cpuAvaliable:
+              type: number
+              format: double
+            processCount:
+              type: integer
+              format: int64
+        count:
+          type: integer
+          format: int64
+    JobStatusCounts:
+      type: object
+      properties:
+        submitted:
+          type: integer
+          format: int64
+        starting:
+          type: integer
+          format: int64
+        started:
+          type: integer
+          format: int64
+        running:
+          type: integer
+          format: int64
+        done:
+          type: integer
+          format: int64
+        stopping:
+          type: integer
+          format: int64
+        stopped:
+          type: integer
+          format: int64
+        canceling:
+          type: integer
+          format: int64
+        cancelled:
+          type: integer
+          format: int64
+        error:
+          type: integer
+          format: int64
+    Forbidden:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    JobTagCounts:
+      type: object
+      properties:
+        tag:
+          type: integer
+          format: int64
+    JobDetailsInfo:
+      type: object
+      properties:
+        workspace:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        filename:
+          type: string
+          format: string
+        resourceConfig:
+          $ref: '#/components/schemas/JobDetailsResourceConfig'
+        tags:
+          type: string
+          format: string
+        timeout:
+          type: integer
+          format: int64
+    Workspace:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        status:
+          type: string
+          format: string
+          description: workspace state
+        name:
+          type: string
+          format: string
+        key:
+          type: string
+          format: string
+        stack:
+          type: string
+          format: string
+    FileMicroInfo:
+      type: object
+      properties:
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+    CopyFile:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        copyStatus:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+    BatchPost:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        batch:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    WorkspaceList:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        workspaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceInfo'
+    Error:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    JobDelete:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
+        jobKey:
+          type: string
+          format: uuid
+        status:
+          type: string
+          format: string
+        jobInfo:
+          $ref: '#/components/schemas/JobDetailsInfo'
+    FileShortInfoPath:
+      type: object
+      properties:
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        filePath:
+          type: string
+          format: string
+        contentLength:
+          type: integer
+          format: int64
+    JobList:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        statusCounts:
+          $ref: '#/components/schemas/JobStatusCounts'
+        tagCounts:
+          $ref: '#/components/schemas/JobTagCounts'
+        filters:
+          $ref: '#/components/schemas/JobListFilters'
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobInfo'
+    JobLedger:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        records:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: integer
+                format: int64
+              datetime:
+                type: string
+                format: date-time
+              key:
+                type: string
+                format: string
+              message:
+                type: string
+                format: string
+    ErrorFileShare:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        error:
+          type: string
+          format: string
+        sourceFileInfo:
+          $ref: '#/components/schemas/FileMicroInfo'
+        targetUsers:
+          type: string
+          format: string
+        correlationId:
+          type: string
+          format: uuid
+    FileShortInfo:
+      type: object
+      properties:
+        filename:
+          type: string
+          format: string
+        directoryPath:
+          type: string
+          format: string
+        contentLength:
+          type: integer
+          format: int64
+    WorkspaceInfo:
+      type: object
+      properties:
+        status:
+          type: string
+          format: string
+          description: workspace state
+        name:
+          type: string
+          format: string
+        key:
+          type: string
+          format: string
+        stack:
+          type: string
+          format: string
+    JobListStats:
+      type: object
+      properties:
+        result:
+          type: string
+          format: string
+        count:
+          type: integer
+          format: int64
+        statusCounts:
+          $ref: '#/components/schemas/JobStatusCounts'
+        tagCounts:
+          $ref: '#/components/schemas/JobTagCounts'
+        filters:
+          $ref: '#/components/schemas/JobListFilters'
     FileShare:
       type: object
       properties:
@@ -2074,134 +2235,21 @@ components:
               result:
                 type: string
                 format: string
-    Workspace:
+    JobPost:
       type: object
       properties:
         result:
           type: string
           format: string
-        status:
-          type: string
-          format: string
-          description: workspace state
-        name:
-          type: string
-          format: string
-        key:
-          type: string
-          format: string
-        stack:
-          type: string
-          format: string
-    Job:
-      type: object
-      properties:
-        result:
+        message:
           type: string
           format: string
         jobKey:
           type: string
           format: uuid
-        submittedDatetime:
-          type: string
-          format: date-time
-        startDatetime:
-          type: string
-          format: date-time
-        endDatetime:
-          type: string
-          format: date-time
-        runTime:
-          type: string
-          format: timespan
-        status:
-          type: string
-          format: string
-        phase:
-          type: string
-          format: string
         jobInfo:
           $ref: '#/components/schemas/JobDetailsInfo'
-    File:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        workspace:
-          type: string
-          format: string
-        filename:
-          type: string
-          format: string
-        directoryPath:
-          type: string
-          format: string
-        filePath:
-          type: string
-          format: string
-        lastModified:
-          type: string
-          format: date-time
-        contentLength:
-          type: integer
-          format: int64
-        date:
-          type: string
-          format: date-time
-        fileCreatedOn:
-          type: string
-          format: date-time
-        fileLastWriteOn:
-          type: string
-          format: date-time
-        fileChangeOn:
-          type: string
-          format: date-time
-    JobInfo:
-      type: object
-      properties:
-        jobKey:
-          type: string
-          format: uuid
-        submittedDatetime:
-          type: string
-          format: date-time
-        startDatetime:
-          type: string
-          format: date-time
-        endDatetime:
-          type: string
-          format: date-time
-        runTime:
-          type: string
-          format: timespan
-        status:
-          type: string
-          format: string
-        phase:
-          type: string
-          format: string
-        jobInfo:
-          $ref: '#/components/schemas/JobDetailsInfo'
-    FileMicroInfo:
-      type: object
-      properties:
-        filename:
-          type: string
-          format: string
-        directoryPath:
-          type: string
-          format: string
-    UploadFile:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        fileInfo:
-          $ref: '#/components/schemas/FileShortInfo'
-    JobMetricsStats:
+    JobMetrics:
       type: object
       properties:
         result:
@@ -2234,86 +2282,38 @@ components:
         count:
           type: integer
           format: int64
-    FileShortInfo:
-      type: object
-      properties:
-        filename:
-          type: string
-          format: string
-        directoryPath:
-          type: string
-          format: string
-        contentLength:
-          type: integer
-          format: int64
-    JobTagCounts:
-      type: object
-      properties:
-        tag:
-          type: integer
-          format: int64
-    JobDetailsInfo:
-      type: object
-      properties:
-        workspace:
-          type: string
-          format: string
-        directoryPath:
-          type: string
-          format: string
-        filename:
-          type: string
-          format: string
-        resourceConfig:
-          $ref: '#/components/schemas/JobDetailsResourceConfig'
-        tags:
-          type: string
-          format: string
-        timeout:
-          type: integer
-          format: int64
-    FileList:
-      type: object
-      required:
-      - result
-      - count
-      - files
-      properties:
-        result:
-          type: string
-          format: string
-        count:
-          type: integer
-          format: int64
-        files:
+        records:
           type: array
           items:
-            $ref: '#/components/schemas/FileShortInfoPath'
-        directories:
-          type: array
-          items:
-            type: string
-    ErrorFolderShare:
-      type: object
-      properties:
-        result:
-          type: string
-          format: string
-        error:
-          type: string
-          format: string
-        sourceDirectoryPath:
-          type: string
-          format: string
-        targetUsers:
-          type: string
-          format: string
-        includeHidden:
-          type: boolean
-          format: boolean
-        correlationId:
-          type: string
-          format: uuid
+            type: object
+            properties:
+              timestamp:
+                type: integer
+                format: int64
+              datetime:
+                type: string
+                format: date-time
+              memoryPercent:
+                type: number
+                format: double
+              memoryResident:
+                type: number
+                format: double
+              memoryAvaliable:
+                type: number
+                format: double
+              cpuPercent:
+                type: number
+                format: double
+              cpuUsed:
+                type: number
+                format: double
+              cpuAvaliable:
+                type: number
+                format: double
+              processCount:
+                type: integer
+                format: int64
   securitySchemes:
     APIKeyHeader:
       type: apiKey
