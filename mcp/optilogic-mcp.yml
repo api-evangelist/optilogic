@@ -71,3 +71,16 @@ tools_note: NOT RECORDED. Anonymous tools/list returns 401, so the live inputSch
 relationship_to_rest_api: The MCP server is NOT a projection of the REST API in openapi/. The REST API
   is a workspace/job/storage control plane; the MCP server fronts Ada, an agentic session over model databases.
   See mcp/optilogic-tool-crosswalk.yml.
+rfc9728:
+  endpoint: https://mcp.optilogic.app/mcp
+  metadata_url: https://mcp.optilogic.app/.well-known/oauth-protected-resource/mcp
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://mcp.optilogic.app/mcp
+    authorization_servers:
+    - https://mcp.optilogic.app
+    bearer_methods_supported:
+    - header
