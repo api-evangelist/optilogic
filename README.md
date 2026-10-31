@@ -64,5 +64,132 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Optilogic is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Optilogic is a cloud-native supply chain design company headquartered in Ann Arbor, Michigan, whose Cosmic Frog platform lets teams model, optimize, simulate and risk-score supply chain networks in one environment, alongside DataStar for AI-assisted data preparation, Ada agentic AI, the Lumina Tariff Optimizer and the Atlas Python coding workspace. Its developer surface is the Optilogic REST API (Swagger 2.0, 67 operations across authentication, workspace, job, storage and utility) served from api.optilogic.app/v0 with X-API-KEY authentication, an OptiPy Python client and an OptiJS browser client, plus an OAuth-protected remote MCP server at mcp.optilogic.app/mcp that powers the Ada connector for Claude.
+
+**Areas:** Supply Chain · Supply Chain Design · Network Optimization · Simulation · Optimization · Logistics · Analytics · Artificial Intelligence · Job · Cloud
+
+## Optilogic on APIs.io
+
+Everything profiled for Optilogic is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/optilogic/](https://apis.io/providers/optilogic/)** — or go straight to one of the APIs or properties below.
+
+### APIs (12)
+
+- [Optilogic MCP Server (Ada Connector)](https://apis.io/apis/optilogic/optilogic-mcp-server-ada-connector/) — Optilogic operates a hosted, remote Model Context Protocol server that backs the Ada connector for Claude. An MCP client points at…
+- [Optilogic Authentication API](https://apis.io/apis/optilogic/optilogic-authentication-api/) — Get authentication keys and client credentials
+- [Optilogic Job API](https://apis.io/apis/optilogic/optilogic-job-api/) — Get information about Andromeda jobs
+- [Optilogic Storage API](https://apis.io/apis/optilogic/optilogic-storage-api/) — Get storage information
+- [Optilogic storage : custom columns API](https://apis.io/apis/optilogic/optilogic-storage-custom-columns-api/) — Manage database custom columns
+- [Optilogic storage : custom tables API](https://apis.io/apis/optilogic/optilogic-storage-custom-tables-api/) — Manage database custom tables
+- [Optilogic storage : labels API](https://apis.io/apis/optilogic/optilogic-storage-labels-api/) — Manage custom key/value attributes on a storage record
+- [Optilogic storage : sharing API](https://apis.io/apis/optilogic/optilogic-storage-sharing-api/) — Share, send, and clone databases
+- [Optilogic storage : tags API](https://apis.io/apis/optilogic/optilogic-storage-tags-api/) — Manage custom tags on a storage record
+- [Optilogic storage : templates API](https://apis.io/apis/optilogic/optilogic-storage-templates-api/) — Get database template information
+- [Optilogic Utility API](https://apis.io/apis/optilogic/optilogic-utility-api/) — A library of tools that solve specific problems
+- [Optilogic Workspace API](https://apis.io/apis/optilogic/optilogic-workspace-api/) — Get information about a workspace, including job and file information
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Optilogic MCP Server (Ada Connector)](https://apis.io/servers/optilogic/optilogic-mcp-server-ada-connector/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Optilogic Rest Api Overlay](https://apis.io/overlays/optilogic/optilogic-rest-api-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Optilogic Authentication](https://apis.io/security/optilogic/optilogic-authentication/)
+- [Optilogic Domain Security](https://apis.io/security/optilogic/optilogic-domain-security/)
+- [Optilogic Trust Center](https://apis.io/security/optilogic/optilogic-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Optilogic Plans Pricing](https://apis.io/plans/optilogic/optilogic-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Optilogic Rate Limits](https://apis.io/rate-limits/optilogic/optilogic-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://optilogic.com/)
+- [Documentation](https://api-docs.optilogic.app/documentation)
+- [Getting started](https://optilogic.com/help-center/connecting-via-api)
+- [API reference](https://api-docs.optilogic.app/documentation)
+- [Sign up](https://www.optilogic.com/create-an-account/)
+- [Support](https://optilogic.com/help-center/)
+- [Changelog](https://optilogic.com/resources/latest-updates)
+- [Blog](https://optilogic.com/resources/blog)
+- [Terms of service](https://optilogic.com/terms-of-use)
+- [Privacy policy](https://optilogic.com/privacy-policy)
+- [GitHub](https://github.com/optilogic)
+
+## API Evangelist rating
+
+**Kin Score 49.0** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 46.7 |
+| Contract governance | 4.5 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 73.2 |
+| Access clarity | 50.0 |
+
+**Agent readiness 55.6** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | yes |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 27.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/optilogic/](https://apis.io/providers/optilogic/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Optilogic: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/optilogic/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
